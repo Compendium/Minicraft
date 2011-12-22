@@ -11,3 +11,9 @@ please fork this one! Pull requests accepted.
 
 I'm going to try to spend the weekend porting this game to Android. This will be done on the 'android' branch of this
 git repository. Let's see how it goes (and no, I won't be screencasting it :( )
+
+
+## Playable Android Port
+## by Chris Lott (http://www.chrislott.net)
+
+I forked this from Rich Jones.  Made it playable.  I included an icon found here: http://kaishinchan.deviantart.com/art/Minecraft-Icon-187560800 
