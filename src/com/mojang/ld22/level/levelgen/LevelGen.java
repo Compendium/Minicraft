@@ -1,11 +1,11 @@
 package com.mojang.ld22.level.levelgen;
 
-import java.awt.Image;
+//import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+//import javax.swing.ImageIcon;
+//import javax.swing.JOptionPane;
 
 import com.mojang.ld22.level.tile.Tile;
 

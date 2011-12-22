@@ -1,19 +1,13 @@
 package com.mojang.ld22;
 
-import java.awt.BorderLayout;
-import java.awt.Canvas;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.util.Log;
 
 import com.mojang.ld22.entity.Player;
@@ -28,9 +22,8 @@ import com.mojang.ld22.screen.LevelTransitionMenu;
 import com.mojang.ld22.screen.Menu;
 import com.mojang.ld22.screen.TitleMenu;
 import com.mojang.ld22.screen.WonMenu;
-import com.schneeloch.other.GameActivity;
 
-public class Game extends Canvas {
+public class Game {
 	private static final long serialVersionUID = 1L;
 	private Random random = new Random();
 	public static final String NAME = "Minicraft";
@@ -38,8 +31,10 @@ public class Game extends Canvas {
 	public static final int WIDTH = 160;
 	private static final int SCALE = 2;
 
-	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+    Bitmap image = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
+
+	//private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+	private int[] pixels = new int[WIDTH * HEIGHT * 4];
 	private boolean running = false;
 	private Screen screen;
 	private Screen lightScreen;
@@ -59,6 +54,9 @@ public class Game extends Canvas {
 	private int pendingLevelChange;
 	private int wonTimer = 0;
 	public boolean hasWon = false;
+    
+    
+    private Paint blackPaint;
 
 	public void setMenu(Menu menu) {
 		this.menu = menu;
@@ -85,10 +83,16 @@ public class Game extends Canvas {
 		levels = new Level[5];
 		currentLevel = 3;
 
+        Log.i("Loading Level", "Loading Level 1");
+        
 		levels[4] = new Level(128, 128, 1, null);
+        Log.i("Loading Level", "Loading Level 1");
 		levels[3] = new Level(128, 128, 0, levels[4]);
+        Log.i("Loading Level", "Loading Level 1");
 		levels[2] = new Level(128, 128, -1, levels[3]);
+        Log.i("Loading Level", "Loading Level 1");
 		levels[1] = new Level(128, 128, -2, levels[2]);
+        Log.i("Loading Level", "Loading Level 1");
 		levels[0] = new Level(128, 128, -3, levels[1]);
 
 		level = levels[currentLevel];
@@ -103,6 +107,10 @@ public class Game extends Canvas {
 	}
 
 	private void init(Context activity) {
+        
+        blackPaint = new Paint();
+        blackPaint.setARGB(255,0,0,0);
+        
 		int pp = 0;
 		for (int r = 0; r < 6; r++) {
 			for (int g = 0; g < 6; g++) {
@@ -147,9 +155,10 @@ public class Game extends Canvas {
 		lastTimer1 = System.currentTimeMillis();
 
 		init(activity);
+        start();
 	}
 	
-	public void iterate(Context context, android.graphics.Canvas canvas)
+	public void iterate(android.graphics.Canvas canvas)
 	{
 		if (running)
 		{
@@ -168,7 +177,7 @@ public class Game extends Canvas {
 				Thread.sleep(2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-				Log.e("Minicraft", e.getMessage());
+				//Log.e("Minicraft", e.getMessage());
 			}
 
 			if (shouldRender) {
@@ -178,7 +187,7 @@ public class Game extends Canvas {
 
 			if (System.currentTimeMillis() - lastTimer1 > 1000) {
 				lastTimer1 += 1000;
-				System.out.println(ticks + " ticks, " + frames + " fps");
+				//System.out.println(ticks + " ticks, " + frames + " fps");
 				frames = 0;
 				ticks = 0;
 			}
@@ -187,9 +196,10 @@ public class Game extends Canvas {
 
 	public void tick() {
 		tickCount++;
-		if (!hasFocus()) {
+		/*
+        if (!hasFocus()) {
 			input.releaseAll();
-		} else {
+		} else {*/
 			if (!player.removed && !hasWon) gameTime++;
 
 			input.tick();
@@ -215,7 +225,7 @@ public class Game extends Canvas {
 				level.tick();
 				Tile.tickCount++;
 			}
-		}
+		//}
 	}
 
 	public void changeLevel(int dir) {
@@ -229,12 +239,13 @@ public class Game extends Canvas {
 	}
 
 	public void render(android.graphics.Canvas canvas) {
+        /*
 		BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
 			createBufferStrategy(3);
 			requestFocus();
 			return;
-		}
+		}*/
 
 		int xScroll = player.x - screen.w / 2;
 		int yScroll = player.y - (screen.h - 8) / 2;
@@ -261,7 +272,7 @@ public class Game extends Canvas {
 
 		renderGui();
 
-		if (!hasFocus()) renderFocusNagger();
+		//if (!canvas.hasFocus()) renderFocusNagger();
 
 		for (int y = 0; y < screen.h; y++) {
 			for (int x = 0; x < screen.w; x++) {
@@ -270,16 +281,22 @@ public class Game extends Canvas {
 			}
 		}
 
-		Graphics g = bs.getDrawGraphics(canvas);
-		g.fillRect(0, 0, getWidth(), getHeight());
 
-		int ww = WIDTH * SCALE;
+        
+        
+		//g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+		/*int ww = WIDTH * SCALE;
 		int hh = HEIGHT * SCALE;
-		int xo = (getWidth() - ww) / 2;
-		int yo = (getHeight() - hh) / 2;
-		g.drawImage(image, xo, yo, ww, hh, null);
-		g.dispose();
-		bs.show();
+		int xo = (canvas.getWidth() - ww) / 2;
+		int yo = (canvas.getHeight() - hh) / 2;
+        */
+
+        canvas.drawBitmap(pixels, 0, WIDTH,0,0,WIDTH,HEIGHT,false,null);
+        
+		//g.drawImage(image, xo, yo, ww, hh, null);
+		//g.dispose();
+		//bs.show();
 	}
 
 	private void renderGui() {
