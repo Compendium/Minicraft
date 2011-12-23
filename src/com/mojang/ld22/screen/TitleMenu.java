@@ -23,7 +23,7 @@ public class TitleMenu extends Menu {
 
 		if (input.attack.clicked || input.menu.clicked) {
 			if (selected == 0) {
-				Sound.test.play();
+				Sound.tick.play();
 				game.resetGame();
 				game.setMenu(null);
 			}

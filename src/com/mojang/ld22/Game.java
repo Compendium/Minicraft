@@ -1,7 +1,6 @@
 package com.mojang.ld22;
 
 import java.io.IOException;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -24,17 +23,15 @@ import com.mojang.ld22.screen.TitleMenu;
 import com.mojang.ld22.screen.WonMenu;
 
 public class Game {
-	private static final long serialVersionUID = 1L;
-	private Random random = new Random();
 	public static final String NAME = "Minicraft";
-	public static final int HEIGHT = 120;
-	public static final int WIDTH = 160;
-	private static final int SCALE = 2;
+	private static final int HEIGHT = 120;
+	private static int WIDTH = 160;
+	private static int SCALE;
 
-    Bitmap image = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
+    Bitmap image;
 
 	//private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = new int[WIDTH * HEIGHT * 4];
+	private int[] pixels;
 	private boolean running = false;
 	private Screen screen;
 	private Screen lightScreen;
@@ -54,7 +51,25 @@ public class Game {
 	private int pendingLevelChange;
 	private int wonTimer = 0;
 	public boolean hasWon = false;
+	
+	public static int getWidth() {
+		return WIDTH;
+	}
+	
+	public static int getHeight() {
+		return HEIGHT;
+	}
     
+	public Game(final int displayWidth, final int displayHeigth) {
+		final int scaleX = displayWidth / WIDTH;
+		final int scaleY = displayHeigth / HEIGHT;
+		if (scaleX < scaleY) { SCALE = scaleX; } else { SCALE = scaleY; }
+		WIDTH = displayWidth / SCALE;
+		
+		pixels = new int[WIDTH * HEIGHT * SCALE];
+		image = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
+		GameView.refreshCanvasSize();
+	}
     
     private Paint blackPaint;
 
@@ -187,6 +202,7 @@ public class Game {
 
 			if (System.currentTimeMillis() - lastTimer1 > 1000) {
 				lastTimer1 += 1000;
+				Log.v(Game.NAME, frames + " fps");
 				//System.out.println(ticks + " ticks, " + frames + " fps");
 				frames = 0;
 				ticks = 0;

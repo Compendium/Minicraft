@@ -1,20 +1,15 @@
 package com.mojang.ld22;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.util.Log;
-import android.view.Window;
-import com.mojang.ld22.Game;
-import com.mojang.ld22.GameView;
-import com.mojang.ld22.InputHandler;
-import com.mojang.ld22.R;
-
 import android.app.Activity;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 /**
  * Adapted from lunar lander example
@@ -23,14 +18,13 @@ import android.widget.Button;
  */
 public class GameActivity extends Activity implements OnTouchListener {
 
-	private Button up;
-	private Button down;
-	private Button left;
-	private Button right;
+	private ImageButton up;
+	private ImageButton down;
+	private ImageButton left;
+	private ImageButton right;
 	private Button attack;
 	private Button menu;
 
-    
     private Game game;
     private GameView gameView;
 
@@ -44,20 +38,23 @@ public class GameActivity extends Activity implements OnTouchListener {
 	protected void onCreate(Bundle savedInstanceState) {
         singleton = this;
         
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		
 		setContentView(R.layout.main);
 
-        game = new Game();
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		
+        game = new Game(metrics.widthPixels, metrics.heightPixels);
         gameView = (GameView)findViewById(R.id.gameView);
 
-
-        up = (Button)findViewById(R.id.buttonUp);
-		down = (Button)findViewById(R.id.buttonDown);
-		left = (Button)findViewById(R.id.buttonLeft);
-		right = (Button)findViewById(R.id.buttonRight);
+        up = (ImageButton)findViewById(R.id.buttonUp);
+		down = (ImageButton)findViewById(R.id.buttonDown);
+		left = (ImageButton)findViewById(R.id.buttonLeft);
+		right = (ImageButton)findViewById(R.id.buttonRight);
 		attack = (Button)findViewById(R.id.buttonAttack);
 		menu = (Button)findViewById(R.id.buttonMenu);
 		
@@ -70,15 +67,12 @@ public class GameActivity extends Activity implements OnTouchListener {
 
         game.startRun(GameActivity.singleton);
 
-        gameThread = new Thread( new Runnable() {
+        gameThread = new Thread(new Runnable() {
             @Override
             public void run() {
-
                 while(shouldRun)
                 {
-                    //Log.i("-----logging-----", "ticking");
-
-                    game.iterate(gameView.gameCanvas);
+                    game.iterate(GameView.gameCanvas);
 
                     gameView.post(new Runnable() {
                         public void run() {
@@ -86,7 +80,6 @@ public class GameActivity extends Activity implements OnTouchListener {
                         }
                     });
                 }
-
             }
         });
 
@@ -103,6 +96,19 @@ public class GameActivity extends Activity implements OnTouchListener {
         //game.stop();
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		shouldRun = false;
+		game.stop();
+	};
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		shouldRun = false;
+		game.stop();
+	};
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
