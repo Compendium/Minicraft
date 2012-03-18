@@ -1,4 +1,4 @@
-package java.awt.image;
+package com.mojang.ld22.misc;
 
 public class DataBufferInt extends DataBuffer
 {

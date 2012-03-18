@@ -2,8 +2,6 @@ package com.mojang.ld22;
 
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
@@ -11,11 +9,12 @@ import android.util.Log;
 
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
-import com.mojang.ld22.gfx.Font;
+//import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.gfx.SpriteSheet;
 import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
+import com.mojang.ld22.misc.ImageIO;
 import com.mojang.ld22.screen.DeadMenu;
 import com.mojang.ld22.screen.LevelTransitionMenu;
 import com.mojang.ld22.screen.Menu;
@@ -158,7 +157,6 @@ public class Game {
 	private double unprocessed;
 	private double nsPerTick;
 	private int frames;
-	private int ticks;
 	private long lastTimer1;
 	
 	public void startRun(Context activity) {
@@ -166,7 +164,6 @@ public class Game {
 		unprocessed = 0;
 		nsPerTick = 1000000000.0 / 60;
 		frames = 0;
-		ticks = 0;
 		lastTimer1 = System.currentTimeMillis();
 
 		init(activity);
@@ -182,7 +179,6 @@ public class Game {
 			lastTime = now;
 			boolean shouldRender = true;
 			while (unprocessed >= 1) {
-				ticks++;
 				tick();
 				unprocessed -= 1;
 				shouldRender = true;
@@ -205,7 +201,6 @@ public class Game {
 				Log.v(Game.NAME, frames + " fps");
 				//System.out.println(ticks + " ticks, " + frames + " fps");
 				frames = 0;
-				ticks = 0;
 			}
 		}
 	}
@@ -349,7 +344,7 @@ public class Game {
 		}
 	}
 
-	private void renderFocusNagger() {
+	/*private void renderFocusNagger() {
 		String msg = "Click to focus!";
 		int xx = (WIDTH - msg.length() * 8) / 2;
 		int yy = (HEIGHT - 8) / 2;
@@ -374,7 +369,7 @@ public class Game {
 		} else {
 			Font.draw(msg, screen, xx, yy, Color.get(5, 555, 555, 555));
 		}
-	}
+	}*/
 
 	public void scheduleLevelChange(int dir) {
 		pendingLevelChange = dir;

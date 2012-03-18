@@ -1,8 +1,7 @@
-package java.awt.image;
+package com.mojang.ld22.misc;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
 
 public class BufferedImage {
 	private final Bitmap bitmap;

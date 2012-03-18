@@ -1,4 +1,4 @@
-package java.awt;
+package com.mojang.ld22.misc;
 
 public class Dimension {
 	private final int width;

@@ -1,6 +1,6 @@
 package com.mojang.ld22.gfx;
 
-import java.awt.image.BufferedImage;
+import com.mojang.ld22.misc.BufferedImage;
 
 public class SpriteSheet {
 	public int width, height;

@@ -1,6 +1,4 @@
-package java.awt.image;
-
-import java.awt.Graphics;
+package com.mojang.ld22.misc;
 
 import android.graphics.Canvas;
 
