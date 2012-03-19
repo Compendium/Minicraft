@@ -3,6 +3,8 @@ package com.mojang.ld22;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 public class InputHandler {
 	public class Key {
 		public int presses, absorbs;
@@ -54,6 +56,10 @@ public class InputHandler {
 
 	public InputHandler(Game game) {
 //		game.addKeyListener(this);
+		//keys.add(up);
+		//keys.add(down);
+		//keys.add(left);
+		//keys.add(right);
 	}
 	
 	public static final int UP = 1;
@@ -65,6 +71,7 @@ public class InputHandler {
 	
 	public void keyEvent(int keyId, boolean isDown)
 	{
+		//Log.w("keyEvent", keyId + " " + isDown);
 		switch (keyId)
 		{
 		case UP:
@@ -87,6 +94,11 @@ public class InputHandler {
 			break;
 			
 		}
+	}
+	
+	public boolean isPressed (int keyId)
+	{
+		return keys.get(keyId-1).down;
 	}
 /*
 	public void keyPressed(KeyEvent ke) {

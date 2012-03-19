@@ -13,6 +13,7 @@ public class Sound {
 	public static final Sound pickup = new Sound(R.raw.pickup);
 	public static final Sound bossdeath = new Sound(R.raw.bossdeath);
 	public static final Sound craft = new Sound(R.raw.craft);
+	public static final Sound hit1 = new Sound(R.raw.hit1);
 	
 	private MediaPlayer mediaPlayer;
 

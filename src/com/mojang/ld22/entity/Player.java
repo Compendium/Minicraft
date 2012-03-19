@@ -2,6 +2,8 @@ package com.mojang.ld22.entity;
 
 import java.util.List;
 
+import android.util.Log;
+
 import com.mojang.ld22.Game;
 import com.mojang.ld22.InputHandler;
 import com.mojang.ld22.entity.particle.TextParticle;
@@ -136,6 +138,8 @@ public class Player extends Mob {
 	}
 
 	private void attack() {
+		Log.w("DEBUG", "player sound");
+		Sound.hit1.play();
 		walkDist += 8;
 		attackDir = dir;
 		attackItem = activeItem;

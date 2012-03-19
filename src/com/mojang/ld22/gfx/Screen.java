@@ -79,7 +79,7 @@ public class Screen {
 	}
 
 	private int[] dither = new int[] { 0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5, };
-
+	//private int[] dither = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
 	public void overlay(Screen screen2, int xa, int ya) {
 		int[] oPixels = screen2.pixels;
 		int i = 0;

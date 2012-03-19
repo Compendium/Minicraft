@@ -97,16 +97,16 @@ public class Game {
 		levels = new Level[5];
 		currentLevel = 3;
 
-        Log.i("Loading Level", "Loading Level 1");
+        Log.i("Loading Level", "Loading Level 1, Stage 1");
         
 		levels[4] = new Level(128, 128, 1, null);
-        Log.i("Loading Level", "Loading Level 1");
+        Log.i("Loading Level", "Loading Level 1, Stage 2");
 		levels[3] = new Level(128, 128, 0, levels[4]);
-        Log.i("Loading Level", "Loading Level 1");
+        Log.i("Loading Level", "Loading Level 1, Stage 3");
 		levels[2] = new Level(128, 128, -1, levels[3]);
-        Log.i("Loading Level", "Loading Level 1");
+        Log.i("Loading Level", "Loading Level 1, Stage 4");
 		levels[1] = new Level(128, 128, -2, levels[2]);
-        Log.i("Loading Level", "Loading Level 1");
+        Log.i("Loading Level", "Loading Level 1, Stage 5");
 		levels[0] = new Level(128, 128, -3, levels[1]);
 
 		level = levels[currentLevel];
@@ -311,9 +311,14 @@ public class Game {
 	}
 
 	private void renderGui() {
+		
+		//crosshair for center of controls
+		screen.render(((screen.w / 5)), (screen.h / 2) , 32-1, Color.get(-1, 222, 333, 444), 0);
+		
+		//black bar on bottom
 		for (int y = 0; y < 2; y++) {
-			for (int x = 0; x < 20; x++) {
-				screen.render(x * 8, screen.h - 16 + y * 8, 0 + 12 * 32, Color.get(000, 000, 000, 000), 0);
+			for (int x = 0; x < (screen.w / 8); x++) {
+				screen.render(x * 8, screen.h - 16 + y * 8, 0, Color.get(000, 000, 000, 000), 0);
 			}
 		}
 

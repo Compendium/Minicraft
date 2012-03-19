@@ -3,71 +3,66 @@ package com.mojang.ld22;
 import android.content.Context;
 import android.graphics.*;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * Created by IntelliJ IDEA.
- * User: chris
- * Date: 12/22/11
- * Time: 12:42 PM
- * To change this template use File | Settings | File Templates.
+ * @author chris
  */
 public class GameView extends View {
-    private static Bitmap gameBitmap;
-    public static Canvas gameCanvas;
+	private static Bitmap gameBitmap;
+	public static Canvas gameCanvas;
 
-    private boolean loaded = false;
-    private Rect source, dest;
-    private int offsetX = 0;
-    
-    private Paint drawPaint;
+	private boolean loaded = false;
+	private Rect source, dest;
+	private int offsetX = 0;
 
-    public GameView(Context context) {
-        super(context);
-        refreshCanvasSize();
-    }
+	private Paint drawPaint;
 
-    public GameView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        refreshCanvasSize();
-    }
-    
-    public static void refreshCanvasSize() {
-        gameBitmap = Bitmap.createBitmap(Game.getWidth(), Game.getHeight(), Bitmap.Config.ARGB_8888);
-        gameCanvas = new Canvas(gameBitmap);    	
-    }
-    
-    public void initMeasure()
-    {
-        drawPaint = new Paint();
-        drawPaint.setAntiAlias(false);
-        drawPaint.setFilterBitmap(false);
+	public GameView(Context context) {
+		super(context);
+		refreshCanvasSize();
+	}
 
-        loaded = true;
-        
-        source = new Rect(0, 0, Game.getWidth(), Game.getHeight());
+	public GameView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		refreshCanvasSize();
+	}
 
-        float proportion = (float)Game.getWidth() / (float)Game.getHeight();
+	public static void refreshCanvasSize() {
+		gameBitmap = Bitmap.createBitmap(Game.getWidth(), Game.getHeight(),
+				Bitmap.Config.ARGB_8888);
+		gameCanvas = new Canvas(gameBitmap);
+	}
 
-        float newWidth = this.getHeight() * proportion;
+	public void initMeasure() {
+		drawPaint = new Paint();
+		drawPaint.setAntiAlias(false);
+		drawPaint.setFilterBitmap(false);
 
-        offsetX = (int)(this.getWidth() - newWidth) / 2;
+		loaded = true;
 
-        dest = new Rect(offsetX, 0, (int)newWidth+offsetX, this.getHeight());
-    }
+		source = new Rect(0, 0, Game.getWidth(), Game.getHeight());
 
+		float proportion = (float) Game.getWidth() / (float) Game.getHeight();
 
-    @Override 
-    protected void onDraw(Canvas canvas) {
-        if (gameBitmap != null) {
-            
-            if(!loaded) initMeasure();
+		float newWidth = this.getHeight() * proportion;
 
-            canvas.drawBitmap(gameBitmap, source, dest, drawPaint);
-            //canvas.drawBitmap(gameBitmap, 0, 0, null);
-            //mCanvas.drawBitmap(mBitmap, 0,0,null);
-        }
-    }
+		offsetX = (int) (this.getWidth() - newWidth) / 2;
 
+		dest = new Rect(offsetX, 0, (int) newWidth + offsetX, this.getHeight());
+	}
 
+	@Override
+	protected void onDraw(Canvas canvas) {
+		if (gameBitmap != null) {
+
+			if (!loaded)
+				initMeasure();
+
+			canvas.drawBitmap(gameBitmap, source, dest, drawPaint);
+			// canvas.drawBitmap(gameBitmap, 0, 0, null);
+			// mCanvas.drawBitmap(mBitmap, 0,0,null);
+		}
+	}
 }
