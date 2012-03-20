@@ -49,7 +49,7 @@
             android:contentDescription="@string/down_name" />         
             -->   
 
-        <Button
+        <!--<Button
             android:id="@+id/buttonAttack"
             android:layout_width="80dip"
             android:layout_height="wrap_content"
@@ -64,5 +64,5 @@
             android:layout_toLeftOf="@+id/buttonAttack"
             android:layout_alignTop="@+id/buttonAttack"
             android:text="@string/menu_name" />
-
+		-->
 </RelativeLayout>

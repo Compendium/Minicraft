@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class InputHandler {
 	public class Key {
-		public int presses, absorbs;
+		public int presses=0, absorbs=0;
 		public boolean down, clicked;
 
 		public Key() {
@@ -15,9 +15,7 @@ public class InputHandler {
 		}
 
 		public void toggle(boolean pressed) {
-			if (pressed != down) {
-				down = pressed;
-			}
+			down = pressed;
 			if (pressed) {
 				presses++;
 			}
