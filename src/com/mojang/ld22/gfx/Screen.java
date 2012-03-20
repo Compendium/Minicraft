@@ -23,30 +23,12 @@ public class Screen {
 		this.h = h;
 
 		pixels = new int[w * h];
-
-		// Random random = new Random();
-
-		/*
-		 * for (int i = 0; i < MAP_WIDTH * MAP_WIDTH; i++) { colors[i] = Color.get(00, 40, 50, 40); tiles[i] = 0;
-		 * 
-		 * if (random.nextInt(40) == 0) { tiles[i] = 32; colors[i] = Color.get(111, 40, 222, 333); databits[i] = random.nextInt(2); } else if (random.nextInt(40) == 0) { tiles[i] = 33; colors[i] = Color.get(20, 40, 30, 550); } else { tiles[i] = random.nextInt(4); databits[i] = random.nextInt(4);
-		 * 
-		 * } }
-		 * 
-		 * Font.setMap("Testing the 0341879123", this, 0, 0, Color.get(0, 555, 555, 555));
-		 */
 	}
 
 	public void clear(int color) {
 		for (int i = 0; i < pixels.length; i++)
 			pixels[i] = color;
 	}
-
-	/*
-	 * public void renderBackground() { for (int yt = yScroll >> 3; yt <= (yScroll + h) >> 3; yt++) { int yp = yt * 8 - yScroll; for (int xt = xScroll >> 3; xt <= (xScroll + w) >> 3; xt++) { int xp = xt * 8 - xScroll; int ti = (xt & (MAP_WIDTH_MASK)) + (yt & (MAP_WIDTH_MASK)) * MAP_WIDTH; render(xp, yp, tiles[ti], colors[ti], databits[ti]); } }
-	 * 
-	 * for (int i = 0; i < sprites.size(); i++) { Sprite s = sprites.get(i); render(s.x, s.y, s.img, s.col, s.bits); } sprites.clear(); }
-	 */
 
 	public void render(int xp, int yp, int tile, int colors, int bits) {
 		xp -= xOffset;
@@ -78,8 +60,7 @@ public class Screen {
 		this.yOffset = yOffset;
 	}
 
-	private int[] dither = new int[] { 0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5, };
-	//private int[] dither = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+	private static int[] dither = new int[] { 0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5, };
 	public void overlay(Screen screen2, int xa, int ya) {
 		int[] oPixels = screen2.pixels;
 		int i = 0;

@@ -21,7 +21,6 @@ public class BufferedImage {
 	}
 
 	public int getWidth() {
-		// TODO Auto-generated method stub
 		return bitmap.getWidth();
 	}
 

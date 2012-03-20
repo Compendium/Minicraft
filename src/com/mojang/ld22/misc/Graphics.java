@@ -25,13 +25,10 @@ public class Graphics {
 
 	public void drawImage(BufferedImage image, int xo, int yo, int ww, int hh,
 			Object object) {
-		// TODO Auto-generated method stub
 		canvas.drawBitmap(image.getData(), 0, ww, xo, yo, ww, hh, false, picturePaint);
 	}
 
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

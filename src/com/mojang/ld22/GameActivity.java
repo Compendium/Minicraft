@@ -25,8 +25,8 @@ public class GameActivity extends Activity implements OnTouchListener
 	// private ImageButton down;
 	// private ImageButton left;
 	// private ImageButton right;
-	private Button attack;
-	private Button menu;
+	//private Button attack;
+	//private Button menu;
 
 	private Game game;
 	private GameView gameView;
