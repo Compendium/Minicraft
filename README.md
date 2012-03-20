@@ -1,5 +1,5 @@
-# Minicraft
-## By Notch (http://notch.tumblr.com/)
+# Minicraft #
+### By Notch (http://notch.tumblr.com/)
 
 For the Ludum Dare 22 competition!
 
@@ -30,8 +30,9 @@ Based on the fork from Chris Lott, I managed to implement the following extras:
 * Game is started full screen (without title bar)
 
 ## Changes to the changes of the Android Port ;)
-### by Alexander Wiens (DerZaubererVonOz, Twitter: @BDSGHTJ, github.com/Compendium/)
+### by Alexander Wiens (DerZaubererVonOz, Twitter: [@BDSGHTJ](https://twitter.com/BDSGHTJ), [github.com/Compendium/](http://github.com/Compendium)
 
+* Fixed build-setup on eclipse
 * Replaced all that button monkey-business with a analog style pseudo joystick
 * Working on adding more sounds, since the original lacks a bit in this aspect
 
@@ -43,3 +44,4 @@ Based on the fork from Chris Lott, I managed to implement the following extras:
 	* Optimizations generally and for android.
 		-Huge memory wastes about 1mb per second collected by the GC
 	* Make APK available somehow. (Is the market an option?, ask Notch and all co-authors / check licenses!)
+	* Edit in game texts ("arrow keys"?)
