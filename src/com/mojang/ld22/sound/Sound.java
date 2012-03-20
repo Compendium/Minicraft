@@ -1,7 +1,8 @@
 package com.mojang.ld22.sound;
 
 import com.mojang.ld22.GameActivity;
-import com.mojang.ld22.R;
+
+import oz.wizards.minicraft.R;
 
 import android.media.MediaPlayer;
 

@@ -94,9 +94,14 @@ public class InputHandler {
 		}
 	}
 	
-	public boolean isPressed (int keyId)
+	public boolean isClicked (int keyId)
 	{
 		return keys.get(keyId-1).clicked;
+	}
+	
+	public boolean isDown (int keyId)
+	{
+		return keys.get(keyId-1).down;
 	}
 /*
 	public void keyPressed(KeyEvent ke) {

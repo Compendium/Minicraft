@@ -2,6 +2,7 @@ package com.mojang.ld22.entity;
 
 import java.util.List;
 
+
 import android.util.Log;
 
 import com.mojang.ld22.Game;
@@ -29,7 +30,6 @@ public class Player extends Mob {
 	public int staminaRecharge;
 	public int staminaRechargeDelay;
 	private long attackDelay = 0;
-	private boolean attackWaiting = false;
 	public int score;
 	public int maxStamina = 10;
 	private int onStairDelay;

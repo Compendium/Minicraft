@@ -2,6 +2,8 @@ package com.mojang.ld22;
 
 import java.io.IOException;
 
+import oz.wizards.minicraft.R;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
@@ -29,14 +31,12 @@ public class Game {
 	private static int WIDTH = 160;
 	private static int SCALE;
 
-	// private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels;
 	private boolean running = false;
 	private Screen screen;
 	private Screen lightScreen;
 	private InputHandler input = new InputHandler(this);
 
-	private int[] colors = new int[256];
+
 	private int tickCount = 0;
 	public int gameTime = 0;
 
@@ -69,7 +69,6 @@ public class Game {
 		}
 		WIDTH = displayWidth / SCALE;
 
-		pixels = new int[WIDTH * HEIGHT * SCALE];
 		GameView.refreshCanvasSize();
 	}
 
@@ -102,24 +101,7 @@ public class Game {
 		currentLevel = 3;
 		
 		//TODO add loading screen
-
-		
-		screen.clear(999);
-		String msg = "Now loading...";
-		int col = Color.get(0, 111, 111, 111);
-		Font.draw(msg, screen, 0, 0, col);
 		Log.i("Loading Level", "Loading Level 1, Stage 1");
-		for (int y = 0; y < screen.h; y++) {
-			for (int x = 0; x < screen.w; x++) {
-				int cc = screen.pixels[x + y * screen.w];
-				if (cc < 255)
-					pixels[x + y * WIDTH] = colors[cc];
-			}
-		}
-
-		// TODO add proper user interface
-		GameView.gameCanvas.drawBitmap(pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT, false, null);
-		
 		
 		levels[4] = new Level(128, 128, 1, null);
 		Log.i("Loading Level", "Loading Level 1, Stage 2");
@@ -147,23 +129,7 @@ public class Game {
 		blackPaint = new Paint();
 		blackPaint.setARGB(255, 0, 0, 0);
 
-		int pp = 0;
-		for (int r = 0; r < 6; r++) {
-			for (int g = 0; g < 6; g++) {
-				for (int b = 0; b < 6; b++) {
-					int rr = (r * 255 / 5);
-					int gg = (g * 255 / 5);
-					int bb = (b * 255 / 5);
-					int mid = (rr * 30 + gg * 59 + bb * 11) / 100;
 
-					int r1 = ((rr + mid * 1) / 2) * 230 / 255 + 10;
-					int g1 = ((gg + mid * 1) / 2) * 230 / 255 + 10;
-					int b1 = ((bb + mid * 1) / 2) * 230 / 255 + 10;
-					colors[pp++] = r1 << 16 | g1 << 8 | b1;
-
-				}
-			}
-		}
 		try {
 			screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(activity.getResources().openRawResource(R.raw.icons))));
 			lightScreen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(activity.getResources().openRawResource(R.raw.icons))));
@@ -295,17 +261,18 @@ public class Game {
 		} else {
 			menu.render(screen);
 		}
-
+		
+		/*int cc = 0;
 		for (int y = 0; y < screen.h; y++) {
 			for (int x = 0; x < screen.w; x++) {
-				int cc = screen.pixels[x + y * screen.w];
+				cc = screen.pixels[x + y * screen.w];
 				if (cc < 255)
 					pixels[x + y * WIDTH] = colors[cc];
 			}
-		}
+		}*/
 
 		// TODO add proper user interface
-		canvas.drawBitmap(pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT, false, null);
+		canvas.drawBitmap(screen.pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT, false, null);
 	}
 
 	private void renderGui() {

@@ -1,5 +1,6 @@
 package com.mojang.ld22;
 
+import oz.wizards.minicraft.R;
 import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class GameActivity extends Activity implements OnTouchListener
 	//private Button attack;
 	//private Button menu;
 
-	private Game game;
+	public Game game;
 	private GameView gameView;
 
 	private Thread gameThread;
@@ -245,11 +246,11 @@ public class GameActivity extends Activity implements OnTouchListener
 				{
 					if (range(202.5f, angle, 337.5f))
 					{
-						if (!game.getInputHandler().isPressed(InputHandler.UP)) game.getInputHandler().keyEvent(InputHandler.UP, true);
+						if (!game.getInputHandler().isDown(InputHandler.UP)) game.getInputHandler().keyEvent(InputHandler.UP, true);
 					}
 					else if (range(157.5f, angle, 22.5))
 					{
-						if (!game.getInputHandler().isPressed(InputHandler.DOWN)) game.getInputHandler().keyEvent(InputHandler.DOWN, true);
+						if (!game.getInputHandler().isDown(InputHandler.DOWN)) game.getInputHandler().keyEvent(InputHandler.DOWN, true);
 					}
 					else
 					{
@@ -259,11 +260,11 @@ public class GameActivity extends Activity implements OnTouchListener
 
 					if (range(112.5f, angle, 247.5f))
 					{
-						if (!game.getInputHandler().isPressed(InputHandler.LEFT)) game.getInputHandler().keyEvent(InputHandler.LEFT, true);
+						if (!game.getInputHandler().isDown(InputHandler.LEFT)) game.getInputHandler().keyEvent(InputHandler.LEFT, true);
 					}
 					else if ((range(292.5f, angle, 360) || range(0, angle, 67.5f)))
 					{
-						if (!game.getInputHandler().isPressed(InputHandler.RIGHT)) game.getInputHandler().keyEvent(InputHandler.RIGHT, true);
+						if (!game.getInputHandler().isDown(InputHandler.RIGHT)) game.getInputHandler().keyEvent(InputHandler.RIGHT, true);
 					}
 					else
 					{

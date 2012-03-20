@@ -1,11 +1,8 @@
 package com.mojang.ld22.gfx;
 
+import com.mojang.ld22.GameActivity;
+
 public class Screen {
-	/*
-	 * public static final int MAP_WIDTH = 64; // Must be 2^x public static final int MAP_WIDTH_MASK = MAP_WIDTH - 1;
-	 * 
-	 * public int[] tiles = new int[MAP_WIDTH * MAP_WIDTH]; public int[] colors = new int[MAP_WIDTH * MAP_WIDTH]; public int[] databits = new int[MAP_WIDTH * MAP_WIDTH];
-	 */
 	public int xOffset;
 	public int yOffset;
 
@@ -14,6 +11,7 @@ public class Screen {
 
 	public final int w, h;
 	public int[] pixels;
+	public static int[] colors = new int[256];
 
 	private SpriteSheet sheet;
 
@@ -23,6 +21,23 @@ public class Screen {
 		this.h = h;
 
 		pixels = new int[w * h];
+		int pp = 0;
+		for (int r = 0; r < 6; r++) {
+			for (int g = 0; g < 6; g++) {
+				for (int b = 0; b < 6; b++) {
+					int rr = (r * 255 / 5);
+					int gg = (g * 255 / 5);
+					int bb = (b * 255 / 5);
+					int mid = (rr * 30 + gg * 59 + bb * 11) / 100;
+
+					int r1 = ((rr + mid * 1) / 2) * 230 / 255 + 10;
+					int g1 = ((gg + mid * 1) / 2) * 230 / 255 + 10;
+					int b1 = ((bb + mid * 1) / 2) * 230 / 255 + 10;
+					colors[pp++] = r1 << 16 | g1 << 8 | b1;
+
+				}
+			}
+		}
 	}
 
 	public void clear(int color) {
@@ -40,21 +55,22 @@ public class Screen {
 		int yTile = tile / 32;
 		int toffs = xTile * 8 + yTile * 8 * sheet.width;
 
+		int col, ys, xs;
 		for (int y = 0; y < 8; y++) {
-			int ys = y;
+			ys = y;
 			if (mirrorY) ys = 7 - y;
 			if (y + yp < 0 || y + yp >= h) continue;
 			for (int x = 0; x < 8; x++) {
 				if (x + xp < 0 || x + xp >= w) continue;
 
-				int xs = x;
+				xs = x;
 				if (mirrorX) xs = 7 - x;
-				int col = (colors >> (sheet.pixels[xs + ys * sheet.width + toffs] * 8)) & 255;
-				if (col < 255) pixels[(x + xp) + (y + yp) * w] = col;
+				col = (colors >> (sheet.pixels[xs + ys * sheet.width + toffs] * 8)) & 255;
+				if (col < 255) pixels[(x + xp) + (y + yp) * w] = Screen.colors[col];
 			}
 		}
 	}
-
+	
 	public void setOffset(int xOffset, int yOffset) {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
@@ -86,15 +102,16 @@ public class Screen {
 		if (x1 > w) x1 = w;
 		if (y1 > h) y1 = h;
 		// System.out.println(x0 + ", " + x1 + " -> " + y0 + ", " + y1);
+		int xd, yd, dist, br;
 		for (int yy = y0; yy < y1; yy++) {
-			int yd = yy - y;
+			yd = yy - y;
 			yd = yd * yd;
 			for (int xx = x0; xx < x1; xx++) {
-				int xd = xx - x;
-				int dist = xd * xd + yd;
+				xd = xx - x;
+				dist = xd * xd + yd;
 				// System.out.println(dist);
 				if (dist <= r * r) {
-					int br = 255 - dist * 255 / (r * r);
+					br = 255 - dist * 255 / (r * r);
 					if (pixels[xx + yy * w] < br) pixels[xx + yy * w] = br;
 				}
 			}

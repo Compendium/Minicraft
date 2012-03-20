@@ -1,5 +1,6 @@
 package com.mojang.ld22.screen;
 
+
 import com.mojang.ld22.GameActivity;
 import com.mojang.ld22.GameView;
 import com.mojang.ld22.gfx.Color;
@@ -26,9 +27,9 @@ public class TitleMenu extends Menu {
 		if (input.attack.clicked || input.menu.clicked) {
 			if (selected == 0) {
 				Sound.tick.play();
-				game.resetGame();
-				game.setMenu(null);
-				GameView.gameCanvas.drawColor(0xffffff);
+				//game.resetGame();
+				//game.setMenu(null);
+				game.setMenu(new LoadingMenu());
 			}
 			if (selected == 1) game.setMenu(new InstructionsMenu(this));
 			if (selected == 2) game.setMenu(new AboutMenu(this));
@@ -36,7 +37,7 @@ public class TitleMenu extends Menu {
 	}
 
 	public void render(Screen screen) {
-		screen.clear(0x060606);
+		screen.clear(0);
 
 		int h = 2;
 		int w = 13;
@@ -58,8 +59,6 @@ public class TitleMenu extends Menu {
 			}
 			Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (8 + i) * 8, col);
 		}
-		if(game.menu == null)
-			Font.draw("blah blub", screen, 0, 0, Color.get(0,111,111,111));
 		Font.draw("(Use the touchscreen!)", screen, 0, screen.h - 8, Color.get(0, 111, 111, 111));
 	}
 }
