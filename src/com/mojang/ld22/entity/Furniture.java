@@ -5,6 +5,10 @@ import com.mojang.ld22.item.FurnitureItem;
 import com.mojang.ld22.item.PowerGloveItem;
 
 public class Furniture extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1061328960081908696L;
 	private int pushTime = 0;
 	private int pushDir = -1;
 	public int col, sprite;

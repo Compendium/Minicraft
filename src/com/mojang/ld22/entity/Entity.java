@@ -1,5 +1,9 @@
 package com.mojang.ld22.entity;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
@@ -8,13 +12,17 @@ import com.mojang.ld22.item.Item;
 import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 
-public class Entity {
+public class Entity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -595333308279425835L;
 	protected final Random random = new Random();
 	public int x, y;
 	public int xr = 6;
 	public int yr = 6;
 	public boolean removed;
-	public Level level;
+	transient public Level level;
 
 	public void render(Screen screen) {
 	}

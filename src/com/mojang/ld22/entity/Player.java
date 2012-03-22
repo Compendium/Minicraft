@@ -1,5 +1,9 @@
 package com.mojang.ld22.entity;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -18,11 +22,15 @@ import com.mojang.ld22.level.tile.Tile;
 import com.mojang.ld22.screen.InventoryMenu;
 import com.mojang.ld22.sound.Sound;
 
-public class Player extends Mob {
+public class Player extends Mob  {
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5731015095280941774L;
 	private InputHandler input;
 	private int attackTime, attackDir;
 
-	public Game game;
+	 public Game game;
 	public Inventory inventory = new Inventory();
 	public Item attackItem;
 	public Item activeItem;

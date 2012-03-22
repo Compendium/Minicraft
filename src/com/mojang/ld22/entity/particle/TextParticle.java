@@ -6,6 +6,10 @@ import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
 
 public class TextParticle extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4077860728062157421L;
 	private String msg;
 	private int col;
 	private int time = 0;

@@ -6,6 +6,7 @@ import com.mojang.ld22.item.ResourceItem;
 import com.mojang.ld22.item.resource.Resource;
 
 public class Zombie extends Mob {
+	private static final long serialVersionUID = -3493341194487708918L;
 	private int xa, ya;
 	private int lvl;
 	private int randomWalkTime = 0;

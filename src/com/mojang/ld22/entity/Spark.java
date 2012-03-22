@@ -6,6 +6,10 @@ import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.gfx.Screen;
 
 public class Spark extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4035122089892301000L;
 	private int lifeTime;
 	public double xa, ya;
 	public double xx, yy;

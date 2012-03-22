@@ -1,7 +1,5 @@
 package com.mojang.ld22.screen;
 
-import android.util.Log;
-
 import com.mojang.ld22.gfx.Screen;
 
 public class LevelTransitionMenu extends Menu {

@@ -1,15 +1,22 @@
 package com.mojang.ld22;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.io.Serializable;
 
 import oz.wizards.minicraft.R;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.os.Environment;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
 //import com.mojang.ld22.gfx.Font;
@@ -26,6 +33,7 @@ import com.mojang.ld22.screen.TitleMenu;
 import com.mojang.ld22.screen.WonMenu;
 
 public class Game {
+	private Context ctxt;
 	public static final String NAME = "Minicraft";
 	private static final int HEIGHT = 120;
 	private static int WIDTH = 160;
@@ -36,8 +44,6 @@ public class Game {
 	private Screen lightScreen;
 	private InputHandler input = new InputHandler(this);
 
-
-	private int tickCount = 0;
 	public int gameTime = 0;
 
 	private Level level;
@@ -45,11 +51,16 @@ public class Game {
 	private int currentLevel = 3;
 	public Player player;
 
-	public Menu menu;
+	public Menu menu = null;
 	private int playerDeadTime;
 	private int pendingLevelChange;
 	private int wonTimer = 0;
 	public boolean hasWon = false;
+	
+	boolean mExternalStorageAvailable = false;
+	boolean mExternalStorageWriteable = false;
+	String mExtStorageState;
+
 
 	public static int getWidth() {
 		return WIDTH;
@@ -59,20 +70,40 @@ public class Game {
 		return HEIGHT;
 	}
 
-	public Game(final int displayWidth, final int displayHeigth) {
+	public Game(Context cx, final int displayWidth, final int displayHeigth) {
+		this.ctxt = cx;
 		final int scaleX = displayWidth / WIDTH;
 		final int scaleY = displayHeigth / HEIGHT;
 		if (scaleX < scaleY) {
 			SCALE = scaleX;
-		} else {
+		}
+		else {
 			SCALE = scaleY;
 		}
 		WIDTH = displayWidth / SCALE;
 
 		GameView.refreshCanvasSize();
+		
+		mExtStorageState = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(mExtStorageState)) {
+			// We can read and write the media
+			mExternalStorageAvailable = mExternalStorageWriteable = true;
+		}
+		else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(mExtStorageState)) {
+			// We can only read the media
+			mExternalStorageAvailable = true;
+			mExternalStorageWriteable = false;
+		}
+		else {
+			// Something else is wrong. It may be one of many other states, but
+			// all we need
+			// to know is we can neither read nor write
+			mExternalStorageAvailable = mExternalStorageWriteable = false;
+		}
+
 	}
 
-	private Paint blackPaint;
+	// private Paint blackPaint;
 
 	public void setMenu(Menu menu) {
 		this.menu = menu;
@@ -97,12 +128,10 @@ public class Game {
 		gameTime = 0;
 		hasWon = false;
 
-		levels = new Level[5];
 		currentLevel = 3;
-		
-		//TODO add loading screen
+
 		Log.i("Loading Level", "Loading Level 1, Stage 1");
-		
+
 		levels[4] = new Level(128, 128, 1, null);
 		Log.i("Loading Level", "Loading Level 1, Stage 2");
 		levels[3] = new Level(128, 128, 0, levels[4]);
@@ -112,7 +141,6 @@ public class Game {
 		levels[1] = new Level(128, 128, -2, levels[2]);
 		Log.i("Loading Level", "Loading Level 1, Stage 5");
 		levels[0] = new Level(128, 128, -3, levels[1]);
-
 		level = levels[currentLevel];
 		player = new Player(this, input);
 		player.findStartPos(level);
@@ -126,19 +154,20 @@ public class Game {
 
 	private void init(Context activity) {
 
-		blackPaint = new Paint();
-		blackPaint.setARGB(255, 0, 0, 0);
-
+		// blackPaint = new Paint();
+		// blackPaint.setARGB(255, 0, 0, 0);
 
 		try {
 			screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(activity.getResources().openRawResource(R.raw.icons))));
 			lightScreen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(activity.getResources().openRawResource(R.raw.icons))));
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		// resetGame();
-		setMenu(new TitleMenu());
+		if (menu == null)
+			setMenu(new TitleMenu());
 	}
 
 	private long lastTime;
@@ -172,7 +201,8 @@ public class Game {
 
 			try {
 				Thread.sleep(2);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
@@ -190,20 +220,21 @@ public class Game {
 	}
 
 	public void tick() {
-		tickCount++;
 		if (player != null && !player.removed && !hasWon)
 			gameTime++;
 
 		input.tick();
 		if (menu != null) {
 			menu.tick();
-		} else {
+		}
+		else {
 			if (player.removed) {
 				playerDeadTime++;
 				if (playerDeadTime > 60) {
 					setMenu(new DeadMenu());
 				}
-			} else {
+			}
+			else {
 				if (pendingLevelChange != 0) {
 					setMenu(new LevelTransitionMenu(pendingLevelChange));
 					pendingLevelChange = 0;
@@ -258,22 +289,23 @@ public class Game {
 				screen.overlay(lightScreen, xScroll, yScroll);
 			}
 			renderGui();
-		} else {
+		}
+		else {
 			menu.render(screen);
 		}
-		
-		/*int cc = 0;
-		for (int y = 0; y < screen.h; y++) {
-			for (int x = 0; x < screen.w; x++) {
-				cc = screen.pixels[x + y * screen.w];
-				if (cc < 255)
-					pixels[x + y * WIDTH] = colors[cc];
-			}
-		}*/
+
+		/*
+		 * int cc = 0; for (int y = 0; y < screen.h; y++) { for (int x = 0; x <
+		 * screen.w; x++) { cc = screen.pixels[x + y * screen.w]; if (cc < 255)
+		 * pixels[x + y * WIDTH] = colors[cc]; } }
+		 */
 
 		// TODO add proper user interface
 		canvas.drawBitmap(screen.pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT, false, null);
 	}
+
+	String time = "";
+	Time t = new Time();
 
 	private void renderGui() {
 		// crosshair for center of controls
@@ -297,7 +329,8 @@ public class Game {
 					screen.render(i * 8, screen.h - 8, 1 + 12 * 32, Color.get(000, 555, 000, 000), 0);
 				else
 					screen.render(i * 8, screen.h - 8, 1 + 12 * 32, Color.get(000, 110, 000, 000), 0);
-			} else {
+			}
+			else {
 				if (i < player.stamina)
 					screen.render(i * 8, screen.h - 8, 1 + 12 * 32, Color.get(000, 220, 550, 553), 0);
 				else
@@ -307,10 +340,8 @@ public class Game {
 		if (player.activeItem != null) {
 			player.activeItem.renderInventory(screen, 10 * 8, screen.h - 16);
 		}
-		
-		//render time in bottom right
-		String time = "";
-		Time t = new Time();
+
+		// render time in bottom right
 		t.setToNow();
 		time = t.hour + ":" + t.minute;
 		Font.draw(time, screen, screen.w - (time.length() * 8), screen.h - 8, Color.get(0, 111, 111, 111));
@@ -329,5 +360,26 @@ public class Game {
 
 	public InputHandler getInputHandler() {
 		return input;
+	}
+
+	public void save() {
+	}
+
+	public void load() {
+		
+		if (mExternalStorageAvailable) {
+			try {
+				File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
+				Log.w("DEBUG", file.getPath() + " | " + file.toString());
+				FileInputStream fis = new FileInputStream(file);
+				ObjectInputStream is = new ObjectInputStream(fis);
+				//TODO load stuff here
+				is.close();
+				Log.w("DEBUG", "loaded state");
+			}
+			catch (IOException e) {
+				Log.e("ExternalStorage", "Error reading save-state");
+			}
+		}
 	}
 }

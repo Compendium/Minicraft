@@ -6,6 +6,10 @@ import com.mojang.ld22.item.ResourceItem;
 import com.mojang.ld22.item.resource.Resource;
 
 public class Slime extends Mob {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 881965245630967255L;
 	private int xa, ya;
 	private int jumpTime = 0;
 	private int lvl;

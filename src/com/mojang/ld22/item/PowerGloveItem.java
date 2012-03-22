@@ -8,6 +8,11 @@ import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
 
 public class PowerGloveItem extends Item {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3040686357346956901L;
+
 	public int getColor() {
 		return Color.get(-1, 100, 320, 430);
 	}

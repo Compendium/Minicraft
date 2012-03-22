@@ -1,12 +1,21 @@
 package com.mojang.ld22.entity;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import com.mojang.ld22.entity.particle.TextParticle;
 import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 import com.mojang.ld22.sound.Sound;
 
-public class Mob extends Entity {
+public class Mob extends Entity  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7585356274010887205L;
 	protected int walkDist = 0;
 	protected int dir = 0;
 	public int hurtTime = 0;

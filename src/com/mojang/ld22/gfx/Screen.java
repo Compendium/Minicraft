@@ -1,7 +1,5 @@
 package com.mojang.ld22.gfx;
 
-import com.mojang.ld22.GameActivity;
-
 public class Screen {
 	public int xOffset;
 	public int yOffset;

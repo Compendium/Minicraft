@@ -5,6 +5,10 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.sound.Sound;
 
 public class AirWizard extends Mob {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9105190277696196853L;
 	private int xa, ya;
 	private int randomWalkTime = 0;
 	private int attackDelay = 0;

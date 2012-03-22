@@ -5,6 +5,11 @@ import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.screen.CraftingMenu;
 
 public class Anvil extends Furniture {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1336746359298577481L;
+
 	public Anvil() {
 		super("Anvil");
 		col = Color.get(-1, 000, 111, 222);

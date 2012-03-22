@@ -5,6 +5,11 @@ import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.screen.CraftingMenu;
 
 public class Furnace extends Furniture {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1835951994399217436L;
+
 	public Furnace() {
 		super("Furnace");
 		col = Color.get(-1, 000, 222, 333);

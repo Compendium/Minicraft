@@ -6,6 +6,10 @@ import com.mojang.ld22.item.Item;
 import com.mojang.ld22.sound.Sound;
 
 public class ItemEntity extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6692228223101543431L;
 	private int lifeTime;
 	protected int walkDist = 0;
 	protected int dir = 0;

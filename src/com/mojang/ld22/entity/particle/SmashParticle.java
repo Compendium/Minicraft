@@ -6,6 +6,10 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.sound.Sound;
 
 public class SmashParticle extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1224045717135961758L;
 	private int time = 0;
 
 	public SmashParticle(int x, int y) {

@@ -9,6 +9,11 @@ import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
 
 public class ToolItem extends Item {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6823899188883806177L;
+
 	private Random random = new Random();
 
 	public static final int MAX_LEVEL = 5;

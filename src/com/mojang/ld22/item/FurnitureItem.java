@@ -10,6 +10,10 @@ import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 
 public class FurnitureItem extends Item {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8571504791754288298L;
 	public Furniture furniture;
 	public boolean placed = false;
 

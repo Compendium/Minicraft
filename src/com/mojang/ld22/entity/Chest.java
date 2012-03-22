@@ -4,6 +4,10 @@ import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.screen.ContainerMenu;
 
 public class Chest extends Furniture {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5530435296425173433L;
 	public Inventory inventory = new Inventory();
 
 	public Chest() {

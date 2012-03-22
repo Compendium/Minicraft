@@ -5,6 +5,11 @@ import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.screen.CraftingMenu;
 
 public class Oven extends Furniture {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -573739245315401168L;
+
 	public Oven() {
 		super("Oven");
 		col = Color.get(-1, 000, 332, 442);

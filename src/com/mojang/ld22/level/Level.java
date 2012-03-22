@@ -1,5 +1,9 @@
 package com.mojang.ld22.level;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,7 +20,9 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.level.levelgen.LevelGen;
 import com.mojang.ld22.level.tile.Tile;
 
-public class Level {
+public class Level implements Serializable {
+	private static final long serialVersionUID = 3482817137435104506L;
+
 	private Random random = new Random();
 
 	public int w, h;
@@ -32,10 +38,12 @@ public class Level {
 	public int monsterDensity = 8;
 
 	public List<Entity> entities = new ArrayList<Entity>();
-	private Comparator<Entity> spriteSorter = new Comparator<Entity>() {
+	transient private Comparator<Entity> spriteSorter = new Comparator<Entity>() {
 		public int compare(Entity e0, Entity e1) {
-			if (e1.y < e0.y) return +1;
-			if (e1.y > e0.y) return -1;
+			if (e1.y < e0.y)
+				return +1;
+			if (e1.y > e0.y)
+				return -1;
 			return 0;
 		}
 
@@ -59,7 +67,8 @@ public class Level {
 		else if (level < 0) {
 			maps = LevelGen.createAndValidateUndergroundMap(w, h, -level);
 			monsterDensity = 4;
-		} else {
+		}
+		else {
 			maps = LevelGen.createAndValidateSkyMap(w, h); // Sky level
 			monsterDensity = 4;
 		}
@@ -82,7 +91,8 @@ public class Level {
 							setTile(x - 1, y + 1, Tile.hardRock, 0);
 							setTile(x + 1, y - 1, Tile.hardRock, 0);
 							setTile(x + 1, y + 1, Tile.hardRock, 0);
-						} else {
+						}
+						else {
 							setTile(x - 1, y, Tile.dirt, 0);
 							setTile(x + 1, y, Tile.dirt, 0);
 							setTile(x, y - 1, Tile.dirt, 0);
@@ -101,11 +111,11 @@ public class Level {
 		for (int i = 0; i < w * h; i++) {
 			entitiesInTiles[i] = new ArrayList<Entity>();
 		}
-		
-		if (level==1) {
+
+		if (level == 1) {
 			AirWizard aw = new AirWizard();
-			aw.x = w*8;
-			aw.y = h*8;
+			aw.x = w * 8;
+			aw.y = h * 8;
 			add(aw);
 		}
 	}
@@ -126,7 +136,7 @@ public class Level {
 
 	private List<Entity> rowSprites = new ArrayList<Entity>();
 
-	public Player player;
+	transient public Player player;
 
 	public void renderSprites(Screen screen, int xScroll, int yScroll) {
 		int xo = xScroll >> 4;
@@ -137,7 +147,8 @@ public class Level {
 		screen.setOffset(xScroll, yScroll);
 		for (int y = yo; y <= h + yo; y++) {
 			for (int x = xo; x <= w + xo; x++) {
-				if (x < 0 || y < 0 || x >= this.w || y >= this.h) continue;
+				if (x < 0 || y < 0 || x >= this.w || y >= this.h)
+					continue;
 				rowSprites.addAll(entitiesInTiles[x + y * this.w]);
 			}
 			if (rowSprites.size() > 0) {
@@ -158,16 +169,19 @@ public class Level {
 		int r = 4;
 		for (int y = yo - r; y <= h + yo + r; y++) {
 			for (int x = xo - r; x <= w + xo + r; x++) {
-				if (x < 0 || y < 0 || x >= this.w || y >= this.h) continue;
+				if (x < 0 || y < 0 || x >= this.w || y >= this.h)
+					continue;
 				List<Entity> entities = entitiesInTiles[x + y * this.w];
 				for (int i = 0; i < entities.size(); i++) {
 					Entity e = entities.get(i);
 					// e.render(screen);
 					int lr = e.getLightRadius();
-					if (lr > 0) screen.renderLight(e.x - 1, e.y - 4, lr * 8);
+					if (lr > 0)
+						screen.renderLight(e.x - 1, e.y - 4, lr * 8);
 				}
 				int lr = getTile(x, y).getLightRadius(this, x, y);
-				if (lr > 0) screen.renderLight(x * 16 + 8, y * 16 + 8, lr * 8);
+				if (lr > 0)
+					screen.renderLight(x * 16 + 8, y * 16 + 8, lr * 8);
 			}
 		}
 		screen.setOffset(0, 0);
@@ -185,23 +199,27 @@ public class Level {
 	}
 
 	public Tile getTile(int x, int y) {
-		if (x < 0 || y < 0 || x >= w || y >= h) return Tile.rock;
+		if (x < 0 || y < 0 || x >= w || y >= h)
+			return Tile.rock;
 		return Tile.tiles[tiles[x + y * w]];
 	}
 
 	public void setTile(int x, int y, Tile t, int dataVal) {
-		if (x < 0 || y < 0 || x >= w || y >= h) return;
+		if (x < 0 || y < 0 || x >= w || y >= h)
+			return;
 		tiles[x + y * w] = t.id;
 		data[x + y * w] = (byte) dataVal;
 	}
 
 	public int getData(int x, int y) {
-		if (x < 0 || y < 0 || x >= w || y >= h) return 0;
+		if (x < 0 || y < 0 || x >= w || y >= h)
+			return 0;
 		return data[x + y * w] & 0xff;
 	}
 
 	public void setData(int x, int y, int val) {
-		if (x < 0 || y < 0 || x >= w || y >= h) return;
+		if (x < 0 || y < 0 || x >= w || y >= h)
+			return;
 		data[x + y * w] = (byte) val;
 	}
 
@@ -224,12 +242,14 @@ public class Level {
 	}
 
 	private void insertEntity(int x, int y, Entity e) {
-		if (x < 0 || y < 0 || x >= w || y >= h) return;
+		if (x < 0 || y < 0 || x >= w || y >= h)
+			return;
 		entitiesInTiles[x + y * w].add(e);
 	}
 
 	private void removeEntity(int x, int y, Entity e) {
-		if (x < 0 || y < 0 || x >= w || y >= h) return;
+		if (x < 0 || y < 0 || x >= w || y >= h)
+			return;
 		entitiesInTiles[x + y * w].remove(e);
 	}
 
@@ -276,7 +296,8 @@ public class Level {
 			if (e.removed) {
 				entities.remove(i--);
 				removeEntity(xto, yto, e);
-			} else {
+			}
+			else {
 				int xt = e.x >> 4;
 				int yt = e.y >> 4;
 
@@ -296,11 +317,13 @@ public class Level {
 		int yt1 = (y1 >> 4) + 1;
 		for (int y = yt0; y <= yt1; y++) {
 			for (int x = xt0; x <= xt1; x++) {
-				if (x < 0 || y < 0 || x >= w || y >= h) continue;
+				if (x < 0 || y < 0 || x >= w || y >= h)
+					continue;
 				List<Entity> entities = entitiesInTiles[x + y * this.w];
 				for (int i = 0; i < entities.size(); i++) {
 					Entity e = entities.get(i);
-					if (e.intersects(x0, y0, x1, y1)) result.add(e);
+					if (e.intersects(x0, y0, x1, y1))
+						result.add(e);
 				}
 			}
 		}
