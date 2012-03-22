@@ -1,10 +1,13 @@
 package com.mojang.ld22.item.resource;
 
+import java.io.Serializable;
+
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 
-public class FoodResource extends Resource {
+public class FoodResource extends Resource implements Serializable {
+	private static final long serialVersionUID = 7243649892479504362L;
 	private int heal;
 	private int staminaCost;
 

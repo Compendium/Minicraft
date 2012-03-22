@@ -17,6 +17,7 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.item.FurnitureItem;
 import com.mojang.ld22.item.Item;
 import com.mojang.ld22.item.PowerGloveItem;
+import com.mojang.ld22.item.SaveStone;
 import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 import com.mojang.ld22.screen.InventoryMenu;
@@ -27,10 +28,10 @@ public class Player extends Mob  {
 	 * 
 	 */
 	private static final long serialVersionUID = 5731015095280941774L;
-	private InputHandler input;
+	transient public InputHandler input;
 	private int attackTime, attackDir;
 
-	 public Game game;
+	transient public Game game;
 	public Inventory inventory = new Inventory();
 	public Item attackItem;
 	public Item activeItem;
@@ -52,6 +53,7 @@ public class Player extends Mob  {
 
 		inventory.add(new FurnitureItem(new Workbench()));
 		inventory.add(new PowerGloveItem());
+		inventory.add(new SaveStone());
 	}
 
 	public void tick() {

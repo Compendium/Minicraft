@@ -13,7 +13,7 @@ public class Furniture extends Entity {
 	private int pushDir = -1;
 	public int col, sprite;
 	public String name;
-	private Player shouldTake;
+	transient private Player shouldTake;
 
 	public Furniture(String name) {
 		this.name = name;

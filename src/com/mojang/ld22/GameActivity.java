@@ -8,8 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-import com.google.gson.Gson;
-
 import oz.wizards.minicraft.R;
 import android.app.Activity;
 import android.content.Context;
@@ -53,7 +51,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		game = new Game(this, metrics.widthPixels, metrics.heightPixels);
+		game = new Game(metrics.widthPixels, metrics.heightPixels);
 		
 		gameView = (GameView) findViewById(R.id.gameView);
 		gameView.setOnTouchListener(this);
@@ -88,9 +86,8 @@ public class GameActivity extends Activity implements OnTouchListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (game == null)
-			loadData();
 		Log.w("DEBUG", "Resumed!");
+		//this.onCreate(null);
 	}
 
 	@Override
@@ -100,9 +97,9 @@ public class GameActivity extends Activity implements OnTouchListener {
 		// gameThread.stop();
 		// gameThread.stop();
 		super.onPause();
-		// game.stop();
-		saveData();
+		game.stop();
 		Log.w("DEBUG", "Paused!");
+		this.finish(); //un-intuitive?
 	}
 
 	@Override
@@ -111,6 +108,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 		shouldRun = false;
 		game.stop();
 		Log.w("DEBUG", "Stopped!");
+		this.finish(); //un-intuitive?
 	};
 
 	@Override

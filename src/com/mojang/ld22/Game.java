@@ -2,11 +2,16 @@ package com.mojang.ld22;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
 import java.io.Serializable;
+import java.io.StreamCorruptedException;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 import oz.wizards.minicraft.R;
 
@@ -16,7 +21,7 @@ import android.os.Environment;
 import android.text.format.Time;
 import android.util.Log;
 
-import com.google.gson.Gson;
+import com.mojang.ld22.entity.Entity;
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
 //import com.mojang.ld22.gfx.Font;
@@ -33,7 +38,7 @@ import com.mojang.ld22.screen.TitleMenu;
 import com.mojang.ld22.screen.WonMenu;
 
 public class Game {
-	private Context ctxt;
+	public Context ctxt;
 	public static final String NAME = "Minicraft";
 	private static final int HEIGHT = 120;
 	private static int WIDTH = 160;
@@ -56,11 +61,10 @@ public class Game {
 	private int pendingLevelChange;
 	private int wonTimer = 0;
 	public boolean hasWon = false;
-	
+
 	boolean mExternalStorageAvailable = false;
 	boolean mExternalStorageWriteable = false;
 	String mExtStorageState;
-
 
 	public static int getWidth() {
 		return WIDTH;
@@ -70,31 +74,28 @@ public class Game {
 		return HEIGHT;
 	}
 
-	public Game(Context cx, final int displayWidth, final int displayHeigth) {
-		this.ctxt = cx;
+	public Game(final int displayWidth, final int displayHeigth) {
+		this.ctxt = GameActivity.singleton;
 		final int scaleX = displayWidth / WIDTH;
 		final int scaleY = displayHeigth / HEIGHT;
 		if (scaleX < scaleY) {
 			SCALE = scaleX;
-		}
-		else {
+		} else {
 			SCALE = scaleY;
 		}
 		WIDTH = displayWidth / SCALE;
 
 		GameView.refreshCanvasSize();
-		
+
 		mExtStorageState = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(mExtStorageState)) {
 			// We can read and write the media
 			mExternalStorageAvailable = mExternalStorageWriteable = true;
-		}
-		else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(mExtStorageState)) {
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(mExtStorageState)) {
 			// We can only read the media
 			mExternalStorageAvailable = true;
 			mExternalStorageWriteable = false;
-		}
-		else {
+		} else {
 			// Something else is wrong. It may be one of many other states, but
 			// all we need
 			// to know is we can neither read nor write
@@ -160,8 +161,7 @@ public class Game {
 		try {
 			screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(activity.getResources().openRawResource(R.raw.icons))));
 			lightScreen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(activity.getResources().openRawResource(R.raw.icons))));
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -201,8 +201,7 @@ public class Game {
 
 			try {
 				Thread.sleep(2);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
@@ -226,15 +225,13 @@ public class Game {
 		input.tick();
 		if (menu != null) {
 			menu.tick();
-		}
-		else {
+		} else {
 			if (player.removed) {
 				playerDeadTime++;
 				if (playerDeadTime > 60) {
 					setMenu(new DeadMenu());
 				}
-			}
-			else {
+			} else {
 				if (pendingLevelChange != 0) {
 					setMenu(new LevelTransitionMenu(pendingLevelChange));
 					pendingLevelChange = 0;
@@ -289,15 +286,12 @@ public class Game {
 				screen.overlay(lightScreen, xScroll, yScroll);
 			}
 			renderGui();
-		}
-		else {
+		} else {
 			menu.render(screen);
 		}
 
 		/*
-		 * int cc = 0; for (int y = 0; y < screen.h; y++) { for (int x = 0; x <
-		 * screen.w; x++) { cc = screen.pixels[x + y * screen.w]; if (cc < 255)
-		 * pixels[x + y * WIDTH] = colors[cc]; } }
+		 * int cc = 0; for (int y = 0; y < screen.h; y++) { for (int x = 0; x < screen.w; x++) { cc = screen.pixels[x + y * screen.w]; if (cc < 255) pixels[x + y * WIDTH] = colors[cc]; } }
 		 */
 
 		// TODO add proper user interface
@@ -329,8 +323,7 @@ public class Game {
 					screen.render(i * 8, screen.h - 8, 1 + 12 * 32, Color.get(000, 555, 000, 000), 0);
 				else
 					screen.render(i * 8, screen.h - 8, 1 + 12 * 32, Color.get(000, 110, 000, 000), 0);
-			}
-			else {
+			} else {
 				if (i < player.stamina)
 					screen.render(i * 8, screen.h - 8, 1 + 12 * 32, Color.get(000, 220, 550, 553), 0);
 				else
@@ -363,23 +356,94 @@ public class Game {
 	}
 
 	public void save() {
-	}
-
-	public void load() {
-		
-		if (mExternalStorageAvailable) {
+		if (mExternalStorageWriteable) {
 			try {
 				File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
 				Log.w("DEBUG", file.getPath() + " | " + file.toString());
-				FileInputStream fis = new FileInputStream(file);
-				ObjectInputStream is = new ObjectInputStream(fis);
-				//TODO load stuff here
-				is.close();
-				Log.w("DEBUG", "loaded state");
-			}
-			catch (IOException e) {
-				Log.e("ExternalStorage", "Error reading save-state");
+				FileOutputStream fos = new FileOutputStream(file, false);
+				ObjectOutputStream os = new ObjectOutputStream(fos);
+
+				os.writeInt(playerDeadTime);
+				Log.w("DEBUG", "saved state");
+				os.writeInt(wonTimer);
+				Log.w("DEBUG", "1");
+				os.writeInt(gameTime);
+				Log.w("DEBUG", "2");
+				os.writeBoolean(hasWon);
+				Log.w("DEBUG", "3");
+				os.writeInt(currentLevel);
+				Log.w("DEBUG", "4");
+
+				os.writeObject(player);
+				Log.w("DEBUG", "5");
+				os.writeObject(levels[0]);
+				Log.w("DEBUG", "6");
+				os.writeObject(levels[1]);
+				Log.w("DEBUG", "7");
+				os.writeObject(levels[2]);
+				Log.w("DEBUG", "8");
+				os.writeObject(levels[3]);
+				Log.w("DEBUG", "9");
+				os.writeObject(levels[4]);
+				Log.w("DEBUG", "10");
+				os.flush();
+				os.close();
+				Log.w("DEBUG", "saved state");
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e("ExternalStorage", "Error saving save-state");
 			}
 		}
+	}
+
+	public void load() throws ClassNotFoundException, StreamCorruptedException, IOException {
+		if (mExternalStorageAvailable) {
+			File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
+			if(!file.exists())
+				throw new IOException("Savegame doesn't exist");
+			Log.w("DEBUG", file.getPath() + " | " + file.toString());
+			FileInputStream fis = new FileInputStream(file);
+			ObjectInputStream is = new ObjectInputStream(fis);
+			// TODO load stuff here
+			playerDeadTime = is.readInt();
+			wonTimer = is.readInt();
+			gameTime = is.readInt();
+			hasWon = is.readBoolean();
+			currentLevel = is.readInt();
+
+			player = (Player) is.readObject();
+			levels[0] = (Level) is.readObject();
+			levels[1] = (Level) is.readObject();
+			levels[2] = (Level) is.readObject();
+			levels[3] = (Level) is.readObject();
+			levels[4] = (Level) is.readObject();
+
+			for (int l = 0; l < levels.length; l++) {
+				levels[l].entities = new ArrayList<Entity>();
+				levels[l].spriteSorter = new Comparator<Entity>() {
+					public int compare(Entity e0, Entity e1) {
+						if (e1.y < e0.y)
+							return +1;
+						if (e1.y > e0.y)
+							return -1;
+						return 0;
+					}
+
+				};
+				
+				for (int i = 0; i < levels[l].entities.size(); i++) {
+					levels[l].entities.get(i).level = levels[l];
+				}
+			}
+
+			level = levels[currentLevel];
+			player.game = this;
+			player.input = input;
+
+			is.close();
+			Log.w("DEBUG", "loaded state");
+		}
+		else
+			throw new IOException("Cannot access file system");
 	}
 }

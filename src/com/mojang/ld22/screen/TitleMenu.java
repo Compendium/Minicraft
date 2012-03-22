@@ -1,6 +1,11 @@
 package com.mojang.ld22.screen;
 
 
+import java.io.IOException;
+import java.io.StreamCorruptedException;
+
+import android.util.Log;
+
 import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
@@ -25,11 +30,28 @@ public class TitleMenu extends Menu {
 		if (input.attack.clicked || input.menu.clicked) {
 			if (selected == 0) {
 				Sound.tick.play();
-				//game.resetGame();
-				//game.setMenu(null);
-				game.setMenu(new LoadingMenu());
+				game.resetGame();
+				game.setMenu(null);
+				//game.setMenu(new LoadingMenu());
 			}
-			if(selected == 1) game.load
+			if(selected == 1){
+				Sound.tick.play();
+				boolean success = false;
+				try {
+					game.load();
+					success = true;
+					Log.w("DEBUG", "Load succeeded");
+				} catch (StreamCorruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if (selected == 2) game.setMenu(new InstructionsMenu(this));
 			if (selected == 3) game.setMenu(new AboutMenu(this));
 		}
