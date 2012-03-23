@@ -363,29 +363,25 @@ public class Game {
 				FileOutputStream fos = new FileOutputStream(file, false);
 				ObjectOutputStream os = new ObjectOutputStream(fos);
 
-				os.writeInt(playerDeadTime);
-				Log.w("DEBUG", "saved state");
-				os.writeInt(wonTimer);
-				Log.w("DEBUG", "1");
-				os.writeInt(gameTime);
-				Log.w("DEBUG", "2");
-				os.writeBoolean(hasWon);
-				Log.w("DEBUG", "3");
+				// os.writeInt(playerDeadTime);
+				// Log.w("DEBUG", "saved state");
+				// os.writeInt(wonTimer);
+				// Log.w("DEBUG", "1");
+				// os.writeInt(gameTime);
+				// Log.w("DEBUG", "2");
+				// os.writeBoolean(hasWon);
+				// Log.w("DEBUG", "3");
 				os.writeInt(currentLevel);
 				Log.w("DEBUG", "4");
-
+				
 				os.writeObject(player);
-				Log.w("DEBUG", "5");
-				os.writeObject(levels[0]);
-				Log.w("DEBUG", "6");
-				os.writeObject(levels[1]);
-				Log.w("DEBUG", "7");
-				os.writeObject(levels[2]);
-				Log.w("DEBUG", "8");
-				os.writeObject(levels[3]);
-				Log.w("DEBUG", "9");
-				os.writeObject(levels[4]);
-				Log.w("DEBUG", "10");
+				
+				long starTime = System.nanoTime();
+				os.writeObject(level);
+				long finishTime = System.nanoTime() - starTime;
+				Log.w("DEBUG", "Wrote level, took " + ((float)finishTime / (float)1000000000) + " seconds");
+
+
 				os.flush();
 				os.close();
 				Log.w("DEBUG", "saved state");
@@ -405,43 +401,45 @@ public class Game {
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream is = new ObjectInputStream(fis);
 			// TODO load stuff here
-			playerDeadTime = is.readInt();
-			wonTimer = is.readInt();
-			gameTime = is.readInt();
-			hasWon = is.readBoolean();
+			//playerDeadTime = is.readInt();
+		//	wonTimer = is.readInt();
+		//	gameTime = is.readInt();
+		//	hasWon = is.readBoolean();
 			currentLevel = is.readInt();
 
 			player = (Player) is.readObject();
-			levels[0] = (Level) is.readObject();
-			levels[1] = (Level) is.readObject();
-			levels[2] = (Level) is.readObject();
-			levels[3] = (Level) is.readObject();
-			levels[4] = (Level) is.readObject();
-
-			for (int l = 0; l < levels.length; l++) {
-				levels[l].entities = new ArrayList<Entity>();
-				levels[l].spriteSorter = new Comparator<Entity>() {
-					public int compare(Entity e0, Entity e1) {
-						if (e1.y < e0.y)
-							return +1;
-						if (e1.y > e0.y)
-							return -1;
-						return 0;
-					}
-
-				};
-				
-				for (int i = 0; i < levels[l].entities.size(); i++) {
-					levels[l].entities.get(i).level = levels[l];
-				}
-			}
-
-			level = levels[currentLevel];
 			player.game = this;
 			player.input = input;
 
+			Log.i("Loading Level", "Loading Level 1, Stage 1");
+
+			levels[4] = new Level(128, 128, 1, null);
+			Log.i("Loading Level", "Loading Level 1, Stage 2");
+			levels[3] = new Level(128, 128, 0, levels[4]);
+			Log.i("Loading Level", "Loading Level 1, Stage 3");
+			levels[2] = new Level(128, 128, -1, levels[3]);
+			Log.i("Loading Level", "Loading Level 1, Stage 4");
+			levels[1] = new Level(128, 128, -2, levels[2]);
+			Log.i("Loading Level", "Loading Level 1, Stage 5");
+			levels[0] = new Level(128, 128, -3, levels[1]);
+			
+			Log.w("DEBUG", "Loading level, starting");
+			levels[currentLevel] = (Level) is.readObject();
+			levels[currentLevel].reset();
+			Log.w("DEBUG", "Loading level, complete");
+			
+			level = levels[currentLevel];
+			
+			//player.findStartPos(level);
+
+			level.add(player);
+
+			//for (int i = 0; i < 5; i++) {
+			//	levels[i].trySpawn(5000);
+			//}
+
 			is.close();
-			Log.w("DEBUG", "loaded state");
+			Log.w("DEBUG", "loaded state, gt=" + gameTime);
 		}
 		else
 			throw new IOException("Cannot access file system");

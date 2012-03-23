@@ -6,6 +6,11 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.level.Level;
 
 public class StoneTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1324694825643258734L;
+
 	public StoneTile(int id) {
 		super(id);
 	}

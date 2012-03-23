@@ -12,6 +12,11 @@ import com.mojang.ld22.item.resource.Resource;
 import com.mojang.ld22.level.Level;
 
 public class CactusTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6192315438610575245L;
+
 	public CactusTile(int id) {
 		super(id);
 		connectsToSand = true;

@@ -16,6 +16,11 @@ import com.mojang.ld22.item.resource.Resource;
 import com.mojang.ld22.level.Level;
 
 public class HardRockTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6385076491743593080L;
+
 	public HardRockTile(int id) {
 		super(id);
 	}

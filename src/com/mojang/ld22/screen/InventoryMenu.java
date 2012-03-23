@@ -40,7 +40,7 @@ public class InventoryMenu extends Menu {
 
 		if (input.attack.clicked && len > 0) {
 			if (player.inventory.items.get(selected) instanceof SaveStone) {
-				// game.save();
+				game.save();
 				Log.w("DEBUG", "saved");
 				//TODO add menu that tells the user that saving is in progress
 				game.setMenu(null);

@@ -6,6 +6,11 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.level.Level;
 
 public class HoleTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 989714552767584093L;
+
 	public HoleTile(int id) {
 		super(id);
 		connectsToSand = true;

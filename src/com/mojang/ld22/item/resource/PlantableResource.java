@@ -8,6 +8,7 @@ import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 
 public class PlantableResource extends Resource {
+	private static final long serialVersionUID = 2021639233036691743L;
 	private List<Tile> sourceTiles;
 	private Tile targetTile;
 

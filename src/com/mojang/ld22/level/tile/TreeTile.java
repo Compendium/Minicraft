@@ -16,6 +16,11 @@ import com.mojang.ld22.item.resource.Resource;
 import com.mojang.ld22.level.Level;
 
 public class TreeTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4945329632074750642L;
+
 	public TreeTile(int id) {
 		super(id);
 		connectsToGrass = true;

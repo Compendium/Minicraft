@@ -5,6 +5,10 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.level.Level;
 
 public class StairsTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6469478409119709131L;
 	private boolean leadsUp;
 
 	public StairsTile(int id, boolean leadsUp) {

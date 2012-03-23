@@ -13,6 +13,11 @@ import com.mojang.ld22.item.resource.Resource;
 import com.mojang.ld22.level.Level;
 
 public class FlowerTile extends GrassTile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7314164005956327361L;
+
 	public FlowerTile(int id) {
 		super(id);
 		tiles[id] = this;

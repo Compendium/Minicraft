@@ -6,6 +6,10 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.level.Level;
 
 public class SaplingTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2410682513972507915L;
 	private Tile onType;
 	private Tile growsTo;
 

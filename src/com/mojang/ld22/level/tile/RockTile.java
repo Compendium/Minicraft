@@ -16,6 +16,11 @@ import com.mojang.ld22.item.resource.Resource;
 import com.mojang.ld22.level.Level;
 
 public class RockTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4661575017852690015L;
+
 	public RockTile(int id) {
 		super(id);
 	}

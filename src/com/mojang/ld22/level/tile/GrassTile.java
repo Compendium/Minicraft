@@ -13,6 +13,11 @@ import com.mojang.ld22.level.Level;
 import com.mojang.ld22.sound.Sound;
 
 public class GrassTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7316981689919620892L;
+
 	public GrassTile(int id) {
 		super(id);
 		connectsToGrass = true;

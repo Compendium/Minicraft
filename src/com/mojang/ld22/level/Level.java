@@ -29,7 +29,7 @@ public class Level implements Serializable {
 
 	public byte[] tiles;
 	public byte[] data;
-	public List<Entity>[] entitiesInTiles;
+	transient public List<Entity>[] entitiesInTiles;
 
 	public int grassColor = 141;
 	public int dirtColor = 322;
@@ -119,6 +119,39 @@ public class Level implements Serializable {
 			add(aw);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void reset ()
+	{
+		entitiesInTiles = new ArrayList[w * h];
+		for (int i = 0; i < w * h; i++) {
+			entitiesInTiles[i] = new ArrayList<Entity>();
+		}
+
+		if (depth == 1) {
+			AirWizard aw = new AirWizard();
+			aw.x = w * 8;
+			aw.y = h * 8;
+			add(aw);
+		}
+		
+		for(int i = 0; i < entities.size(); i++)
+		{
+			entities.get(i).level = this;
+			insertEntity(entities.get(i).x >> 4, entities.get(i).y >> 4, entities.get(i));
+		}
+		
+		spriteSorter = new Comparator<Entity>() {
+			public int compare(Entity e0, Entity e1) {
+				if (e1.y < e0.y)
+					return +1;
+				if (e1.y > e0.y)
+					return -1;
+				return 0;
+			}
+
+		};
+	}
 
 	public void renderBackground(Screen screen, int xScroll, int yScroll) {
 		int xo = xScroll >> 4;
@@ -134,7 +167,7 @@ public class Level implements Serializable {
 		screen.setOffset(0, 0);
 	}
 
-	transient private List<Entity> rowSprites = new ArrayList<Entity>();
+	public List<Entity> rowSprites = new ArrayList<Entity>();
 
 	transient public Player player;
 

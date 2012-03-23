@@ -5,6 +5,7 @@ import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
 
 public class SaveStone extends Item {
+	private static final long serialVersionUID = 2157891496716457992L;
 	public String getName() {
 		return "Mem Stone";
 	}

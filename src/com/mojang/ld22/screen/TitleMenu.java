@@ -51,6 +51,7 @@ public class TitleMenu extends Menu {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				game.setMenu(null);
 			}
 			if (selected == 2) game.setMenu(new InstructionsMenu(this));
 			if (selected == 3) game.setMenu(new AboutMenu(this));

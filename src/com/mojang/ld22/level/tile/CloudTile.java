@@ -13,6 +13,11 @@ import com.mojang.ld22.item.resource.Resource;
 import com.mojang.ld22.level.Level;
 
 public class CloudTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8174311206690112596L;
+
 	public CloudTile(int id) {
 		super(id);
 	}

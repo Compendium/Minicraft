@@ -24,9 +24,6 @@ import com.mojang.ld22.screen.InventoryMenu;
 import com.mojang.ld22.sound.Sound;
 
 public class Player extends Mob  {
-	 /**
-	 * 
-	 */
 	private static final long serialVersionUID = 5731015095280941774L;
 	transient public InputHandler input;
 	private int attackTime, attackDir;

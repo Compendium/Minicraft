@@ -8,6 +8,11 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.level.Level;
 
 public class WaterTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5730783956242078284L;
+
 	public WaterTile(int id) {
 		super(id);
 		connectsToSand = true;

@@ -10,6 +10,11 @@ import com.mojang.ld22.item.ToolType;
 import com.mojang.ld22.level.Level;
 
 public class FarmTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 882208847538492571L;
+
 	public FarmTile(int id) {
 		super(id);
 	}

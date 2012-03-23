@@ -1,5 +1,6 @@
 package com.mojang.ld22.level.tile;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import com.mojang.ld22.entity.Entity;
@@ -10,7 +11,8 @@ import com.mojang.ld22.item.Item;
 import com.mojang.ld22.item.resource.Resource;
 import com.mojang.ld22.level.Level;
 
-public class Tile {
+public class Tile implements Serializable {
+	private static final long serialVersionUID = -5589510017462744706L;
 	public static int tickCount = 0;
 	protected Random random = new Random();
 

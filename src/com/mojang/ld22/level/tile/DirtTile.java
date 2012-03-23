@@ -13,6 +13,11 @@ import com.mojang.ld22.level.Level;
 import com.mojang.ld22.sound.Sound;
 
 public class DirtTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5001539459995286467L;
+
 	public DirtTile(int id) {
 		super(id);
 	}

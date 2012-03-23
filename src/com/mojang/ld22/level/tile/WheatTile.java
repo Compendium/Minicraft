@@ -14,6 +14,11 @@ import com.mojang.ld22.item.resource.Resource;
 import com.mojang.ld22.level.Level;
 
 public class WheatTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7382937063093312161L;
+
 	public WheatTile(int id) {
 		super(id);
 	}

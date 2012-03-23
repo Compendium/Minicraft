@@ -14,6 +14,11 @@ import com.mojang.ld22.item.ToolType;
 import com.mojang.ld22.level.Level;
 
 public class CloudCactusTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5396430287727040251L;
+
 	public CloudCactusTile(int id) {
 		super(id);
 	}

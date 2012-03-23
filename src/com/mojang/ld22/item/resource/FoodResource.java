@@ -6,7 +6,7 @@ import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 
-public class FoodResource extends Resource implements Serializable {
+public class FoodResource extends Resource {
 	private static final long serialVersionUID = 7243649892479504362L;
 	private int heal;
 	private int staminaCost;

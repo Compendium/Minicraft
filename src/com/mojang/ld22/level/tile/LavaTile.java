@@ -8,6 +8,11 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.level.Level;
 
 public class LavaTile extends Tile {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7570468593721353133L;
+
 	public LavaTile(int id) {
 		super(id);
 		connectsToSand = true;
