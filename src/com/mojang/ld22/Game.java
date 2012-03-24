@@ -2,26 +2,20 @@ package com.mojang.ld22;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.io.Serializable;
 import java.io.StreamCorruptedException;
-import java.util.ArrayList;
-import java.util.Comparator;
-
 import oz.wizards.minicraft.R;
 
 import android.content.Context;
-import android.graphics.Paint;
+import android.content.IntentFilter;
 import android.os.Environment;
 import android.text.format.Time;
 import android.util.Log;
+import android.content.Intent;
 
-import com.mojang.ld22.entity.Entity;
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
 //import com.mojang.ld22.gfx.Font;
@@ -65,6 +59,10 @@ public class Game {
 	boolean mExternalStorageAvailable = false;
 	boolean mExternalStorageWriteable = false;
 	String mExtStorageState;
+	
+	String status = "";
+	Time t = new Time();
+	int battery = 0;
 
 	public static int getWidth() {
 		return WIDTH;
@@ -200,7 +198,7 @@ public class Game {
 			}
 
 			try {
-				Thread.sleep(2);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -214,6 +212,15 @@ public class Game {
 				lastTimer1 += 1000;
 				Log.v(Game.NAME, frames + " fps");
 				frames = 0;
+				
+				t.setToNow();
+
+				Intent bat = GameActivity.singleton.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+				int level = bat.getIntExtra("level", 0);
+				int scale = bat.getIntExtra("scale", 100);
+				int battery = level * 100 / scale;
+				
+				status = battery + "% " + t.hour + ":" + t.minute;
 			}
 		}
 	}
@@ -244,6 +251,7 @@ public class Game {
 			}
 			level.tick();
 			Tile.tickCount++;
+			Log.w("DEBUG", "ticked");
 		}
 	}
 
@@ -298,9 +306,6 @@ public class Game {
 		canvas.drawBitmap(screen.pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT, false, null);
 	}
 
-	String time = "";
-	Time t = new Time();
-
 	private void renderGui() {
 		// crosshair for center of controls
 		screen.render(((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
@@ -334,10 +339,8 @@ public class Game {
 			player.activeItem.renderInventory(screen, 10 * 8, screen.h - 16);
 		}
 
-		// render time in bottom right
-		t.setToNow();
-		time = t.hour + ":" + t.minute;
-		Font.draw(time, screen, screen.w - (time.length() * 8), screen.h - 8, Color.get(0, 111, 111, 111));
+		// render status info in bottom right
+		Font.draw(status, screen, screen.w - (status.length() * 8), screen.h - 8, Color.get(0, 111, 111, 111));
 	}
 
 	public void scheduleLevelChange(int dir) {
@@ -373,14 +376,16 @@ public class Game {
 				// Log.w("DEBUG", "3");
 				os.writeInt(currentLevel);
 				Log.w("DEBUG", "4");
-				
-				os.writeObject(player);
-				
-				long starTime = System.nanoTime();
-				os.writeObject(level);
-				long finishTime = System.nanoTime() - starTime;
-				Log.w("DEBUG", "Wrote level, took " + ((float)finishTime / (float)1000000000) + " seconds");
 
+				os.writeObject(player);
+
+				long starTime = System.nanoTime();
+				for (int i = 0; i < levels.length; i++) {
+					Log.w("DEBUG", "Saving level " + i);
+					os.writeObject(levels[i]);
+				}
+				long finishTime = System.nanoTime() - starTime;
+				Log.w("DEBUG", "Wrote levels, took " + ((float) finishTime / (float) 1000000000) + " seconds");
 
 				os.flush();
 				os.close();
@@ -395,53 +400,51 @@ public class Game {
 	public void load() throws ClassNotFoundException, StreamCorruptedException, IOException {
 		if (mExternalStorageAvailable) {
 			File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
-			if(!file.exists())
+			if (!file.exists())
 				throw new IOException("Savegame doesn't exist");
 			Log.w("DEBUG", file.getPath() + " | " + file.toString());
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream is = new ObjectInputStream(fis);
 			// TODO load stuff here
-			//playerDeadTime = is.readInt();
-		//	wonTimer = is.readInt();
-		//	gameTime = is.readInt();
-		//	hasWon = is.readBoolean();
+			// playerDeadTime = is.readInt();
+			// wonTimer = is.readInt();
+			// gameTime = is.readInt();
+			// hasWon = is.readBoolean();
+			playerDeadTime = 0;
+			wonTimer = 0;
+			gameTime = 0;
+			hasWon = false;
+
 			currentLevel = is.readInt();
 
 			player = (Player) is.readObject();
 			player.game = this;
 			player.input = input;
+			player.stamina = player.maxStamina;
+			player.staminaRecharge = 0;
+			player.staminaRechargeDelay = 40;
 
-			Log.i("Loading Level", "Loading Level 1, Stage 1");
-
-			levels[4] = new Level(128, 128, 1, null);
-			Log.i("Loading Level", "Loading Level 1, Stage 2");
-			levels[3] = new Level(128, 128, 0, levels[4]);
-			Log.i("Loading Level", "Loading Level 1, Stage 3");
-			levels[2] = new Level(128, 128, -1, levels[3]);
-			Log.i("Loading Level", "Loading Level 1, Stage 4");
-			levels[1] = new Level(128, 128, -2, levels[2]);
-			Log.i("Loading Level", "Loading Level 1, Stage 5");
-			levels[0] = new Level(128, 128, -3, levels[1]);
-			
-			Log.w("DEBUG", "Loading level, starting");
-			levels[currentLevel] = (Level) is.readObject();
-			levels[currentLevel].reset();
-			Log.w("DEBUG", "Loading level, complete");
-			
+			long starTime = System.nanoTime();
+			for (int i = 0; i < levels.length; i++) {
+				Log.i("Loading Level", "Loading Level " + i);
+				levels[i] = (Level) is.readObject();
+				levels[i].reset();
+			}
+			long finishTime = System.nanoTime() - starTime;
+			Log.w("DEBUG", "Loaded levels, took " + ((float) finishTime / (float) 1000000000) + " seconds");
 			level = levels[currentLevel];
-			
-			//player.findStartPos(level);
+			level.player = player;
 
-			level.add(player);
+			// player.findStartPos(level);
 
-			//for (int i = 0; i < 5; i++) {
-			//	levels[i].trySpawn(5000);
-			//}
+			// level.add(player);
+
+			// for (int i = 0; i < 5; i++) {
+			// levels[i].trySpawn(5000);
+			// }
 
 			is.close();
-			Log.w("DEBUG", "loaded state, gt=" + gameTime);
-		}
-		else
+		} else
 			throw new IOException("Cannot access file system");
 	}
 }

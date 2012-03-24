@@ -1,8 +1,5 @@
 package com.mojang.ld22.level;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +33,10 @@ public class Level implements Serializable {
 	public int sandColor = 550;
 	private int depth;
 	public int monsterDensity = 8;
+
+	public List<Entity> rowSprites = new ArrayList<Entity>();
+
+	transient public Player player;
 
 	public List<Entity> entities = new ArrayList<Entity>();
 	transient public Comparator<Entity> spriteSorter = new Comparator<Entity>() {
@@ -166,10 +167,6 @@ public class Level implements Serializable {
 		}
 		screen.setOffset(0, 0);
 	}
-
-	public List<Entity> rowSprites = new ArrayList<Entity>();
-
-	transient public Player player;
 
 	public void renderSprites(Screen screen, int xScroll, int yScroll) {
 		int xo = xScroll >> 4;

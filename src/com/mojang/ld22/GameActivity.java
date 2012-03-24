@@ -1,19 +1,9 @@
 package com.mojang.ld22;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-
 import oz.wizards.minicraft.R;
 import android.app.Activity;
-import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -36,7 +26,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 	private boolean shouldRun = true;
 
 	public static GameActivity singleton;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		singleton = this;
@@ -45,14 +35,13 @@ public class GameActivity extends Activity implements OnTouchListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		
+
 		setContentView(R.layout.main);
-		
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		game = new Game(metrics.widthPixels, metrics.heightPixels);
-		
+
 		gameView = (GameView) findViewById(R.id.gameView);
 		gameView.setOnTouchListener(this);
 
@@ -86,8 +75,28 @@ public class GameActivity extends Activity implements OnTouchListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (shouldRun == false) {
+			gameThread.interrupt();
+			gameThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					while (shouldRun) {
+						game.iterate(GameView.gameCanvas);
+
+						gameView.post(new Runnable() {
+							public void run() {
+								gameView.invalidate();
+							}
+						});
+					}
+				}
+			});
+			gameThread.start();
+			shouldRun = true;
+			game.start();
+		}
 		Log.w("DEBUG", "Resumed!");
-		//this.onCreate(null);
+		// this.onCreate(null);
 	}
 
 	@Override
@@ -99,7 +108,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 		super.onPause();
 		game.stop();
 		Log.w("DEBUG", "Paused!");
-		this.finish(); //un-intuitive?
+		// this.finish(); //un-intuitive?
 	}
 
 	@Override
@@ -108,7 +117,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 		shouldRun = false;
 		game.stop();
 		Log.w("DEBUG", "Stopped!");
-		this.finish(); //un-intuitive?
+		// this.finish(); //un-intuitive?
 	};
 
 	@Override
@@ -135,8 +144,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 	int menuId = -1;
 
 	/*
-	 * @Override public boolean onTouchEvent(MotionEvent ev) { return
-	 * onTouch(null, ev); }
+	 * @Override public boolean onTouchEvent(MotionEvent ev) { return onTouch(null, ev); }
 	 */
 
 	@Override
@@ -159,8 +167,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 						if (event.getY(i) < gameView.getHeight() / 2) {
 							game.getInputHandler().keyEvent(InputHandler.MENU, true);
 							menuId = event.getPointerId(i);
-						}
-						else if (event.getY(i) > gameView.getHeight() / 2) {
+						} else if (event.getY(i) > gameView.getHeight() / 2) {
 							game.getInputHandler().keyEvent(InputHandler.ATTACK, true);
 							attackId = event.getPointerId(i);
 						}
@@ -181,11 +188,9 @@ public class GameActivity extends Activity implements OnTouchListener {
 					game.getInputHandler().keyEvent(InputHandler.DOWN, false);
 					game.getInputHandler().keyEvent(InputHandler.RIGHT, false);
 					game.getInputHandler().keyEvent(InputHandler.LEFT, false);
-				}
-				else if (action >> MotionEvent.ACTION_POINTER_ID_SHIFT == attackId) {
+				} else if (action >> MotionEvent.ACTION_POINTER_ID_SHIFT == attackId) {
 					game.getInputHandler().keyEvent(InputHandler.ATTACK, false);
-				}
-				else if (action >> MotionEvent.ACTION_POINTER_ID_SHIFT == menuId) {
+				} else if (action >> MotionEvent.ACTION_POINTER_ID_SHIFT == menuId) {
 					game.getInputHandler().keyEvent(InputHandler.MENU, false);
 				}
 			}
@@ -228,12 +233,10 @@ public class GameActivity extends Activity implements OnTouchListener {
 					if (range(202.5f, angle, 337.5f)) {
 						if (!game.getInputHandler().isDown(InputHandler.UP))
 							game.getInputHandler().keyEvent(InputHandler.UP, true);
-					}
-					else if (range(157.5f, angle, 22.5)) {
+					} else if (range(157.5f, angle, 22.5)) {
 						if (!game.getInputHandler().isDown(InputHandler.DOWN))
 							game.getInputHandler().keyEvent(InputHandler.DOWN, true);
-					}
-					else {
+					} else {
 						game.getInputHandler().keyEvent(InputHandler.UP, false);
 						game.getInputHandler().keyEvent(InputHandler.DOWN, false);
 					}
@@ -241,12 +244,10 @@ public class GameActivity extends Activity implements OnTouchListener {
 					if (range(112.5f, angle, 247.5f)) {
 						if (!game.getInputHandler().isDown(InputHandler.LEFT))
 							game.getInputHandler().keyEvent(InputHandler.LEFT, true);
-					}
-					else if ((range(292.5f, angle, 360) || range(0, angle, 67.5f))) {
+					} else if ((range(292.5f, angle, 360) || range(0, angle, 67.5f))) {
 						if (!game.getInputHandler().isDown(InputHandler.RIGHT))
 							game.getInputHandler().keyEvent(InputHandler.RIGHT, true);
-					}
-					else {
+					} else {
 						game.getInputHandler().keyEvent(InputHandler.RIGHT, false);
 						game.getInputHandler().keyEvent(InputHandler.LEFT, false);
 					}
@@ -286,30 +287,5 @@ public class GameActivity extends Activity implements OnTouchListener {
 		if ((a < x && x < b) || (a > x && x > b))
 			return true;
 		return false;
-	}
-
-	private void saveData() {
-	/*	if (mExternalStorageWriteable) {
-			try {
-				File file = new File(getExternalFilesDir(null), "save.obj");
-				Log.w("DEBUG", file.getPath() + " | " + file.toString());
-				// FileOutputStream fos = this.openFileOutput("save.obj",
-				// Context.MODE_PRIVATE);
-				FileOutputStream fos = new FileOutputStream(file);
-
-				ObjectOutputStream os = new ObjectOutputStream(fos);
-				//TODO save stuff here
-				os.close();
-				Log.w("DEBUG", "saved states");
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-				Log.e("ExternalStorage", "Error writing save-state");
-			}
-		}*/
-	}
-
-	private void loadData() {
-
 	}
 }

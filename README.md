@@ -35,13 +35,13 @@ Based on the fork from Chris Lott, I managed to implement the following extras:
 * Fixed build-setup on eclipse
 * Replaced all that button monkey-business with a analog style pseudo joystick
 * Working on adding more sounds, since the original lacks a bit in this aspect
+* Added really fast saving and loading :D
 
 ### TODO
 	* Multi-touch is more or less done, maybe add some more graphical feedback where the interface is and its status.
-	* Fix 'key-repeat' so you can hold attack like on the pc and get continous attacking.
-	* Saving/Loading game state, something lightweight on androids '/tmp/' -> not preserved on reboot, but easy to implement?
-	* Loading screen
+	* Fix flaky controls
 	* Optimizations generally and for android.
-		-Huge memory wastes about 1mb per second collected by the GC
+		-Huge memory wastes about 1mb per second collected by the GC?
 	* Make APK available somehow. (Is the market an option?, ask Notch and all co-authors / check licenses!)
-	* Edit in game texts ("arrow keys"?)
+	* Edit in game texts ("arrow keys"?)???
+	* When should saving happen?

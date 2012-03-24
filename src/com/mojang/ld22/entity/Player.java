@@ -1,9 +1,5 @@
 package com.mojang.ld22.entity;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.List;
 
 
@@ -37,7 +33,7 @@ public class Player extends Mob  {
 	public int staminaRechargeDelay;
 	private long attackDelay = 0;
 	public int score;
-	public int maxStamina = 10;
+	public final int maxStamina = 10;
 	private int onStairDelay;
 	public int invulnerableTime = 0;
 

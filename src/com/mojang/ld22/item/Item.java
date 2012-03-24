@@ -10,7 +10,7 @@ import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 import com.mojang.ld22.screen.ListItem;
 
-public class Item implements ListItem, Serializable{
+public class Item implements ListItem, Serializable {
 	private static final long serialVersionUID = -5483095405638959090L;
 
 	public int getColor() {
