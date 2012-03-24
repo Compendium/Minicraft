@@ -34,13 +34,10 @@ public class LoadingMenu extends Menu {
 					success = true;
 					Log.w("DEBUG", "Load succeeded");
 				} catch (StreamCorruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				if (success)

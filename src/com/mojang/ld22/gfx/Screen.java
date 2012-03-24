@@ -56,31 +56,38 @@ public class Screen {
 		int col, ys, xs;
 		for (int y = 0; y < 8; y++) {
 			ys = y;
-			if (mirrorY) ys = 7 - y;
-			if (y + yp < 0 || y + yp >= h) continue;
+			if (mirrorY)
+				ys = 7 - y;
+			if (y + yp < 0 || y + yp >= h)
+				continue;
 			for (int x = 0; x < 8; x++) {
-				if (x + xp < 0 || x + xp >= w) continue;
+				if (x + xp < 0 || x + xp >= w)
+					continue;
 
 				xs = x;
-				if (mirrorX) xs = 7 - x;
+				if (mirrorX)
+					xs = 7 - x;
 				col = (colors >> (sheet.pixels[xs + ys * sheet.width + toffs] * 8)) & 255;
-				if (col < 255) pixels[(x + xp) + (y + yp) * w] = Screen.colors[col];
+				if (col < 255)
+					pixels[(x + xp) + (y + yp) * w] = Screen.colors[col];
 			}
 		}
 	}
-	
+
 	public void setOffset(int xOffset, int yOffset) {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 	}
 
 	private static int[] dither = new int[] { 0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5, };
+
 	public void overlay(Screen screen2, int xa, int ya) {
 		int[] oPixels = screen2.pixels;
 		int i = 0;
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
-				if (oPixels[i] / 10 <= dither[((x + xa) & 3) + ((y + ya) & 3) * 4]) pixels[i] = 0;
+				if (oPixels[i] / 10 <= dither[((x + xa) & 3) + ((y + ya) & 3) * 4])
+					pixels[i] = 0;
 				i++;
 			}
 
@@ -95,10 +102,14 @@ public class Screen {
 		int y0 = y - r;
 		int y1 = y + r;
 
-		if (x0 < 0) x0 = 0;
-		if (y0 < 0) y0 = 0;
-		if (x1 > w) x1 = w;
-		if (y1 > h) y1 = h;
+		if (x0 < 0)
+			x0 = 0;
+		if (y0 < 0)
+			y0 = 0;
+		if (x1 > w)
+			x1 = w;
+		if (y1 > h)
+			y1 = h;
 		// System.out.println(x0 + ", " + x1 + " -> " + y0 + ", " + y1);
 		int xd, yd, dist, br;
 		for (int yy = y0; yy < y1; yy++) {
@@ -110,7 +121,8 @@ public class Screen {
 				// System.out.println(dist);
 				if (dist <= r * r) {
 					br = 255 - dist * 255 / (r * r);
-					if (pixels[xx + yy * w] < br) pixels[xx + yy * w] = br;
+					if (pixels[xx + yy * w] < br)
+						pixels[xx + yy * w] = br;
 				}
 			}
 		}

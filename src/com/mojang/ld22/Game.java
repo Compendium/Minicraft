@@ -60,7 +60,7 @@ public class Game {
 	public boolean mExternalStorageAvailable = false;
 	public boolean mExternalStorageWriteable = false;
 	String mExtStorageState;
-	
+
 	String status = "";
 	Time t = new Time();
 	int battery = 0;
@@ -113,9 +113,6 @@ public class Game {
 
 	public void start() {
 		running = true;
-		// new Thread(this).start();
-		// this is already in a thread
-		// run(activity);
 	}
 
 	public void stop() {
@@ -153,10 +150,6 @@ public class Game {
 	}
 
 	private void init(Context activity) {
-
-		// blackPaint = new Paint();
-		// blackPaint.setARGB(255, 0, 0, 0);
-
 		try {
 			screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(activity.getResources().openRawResource(R.raw.icons))));
 			lightScreen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(activity.getResources().openRawResource(R.raw.icons))));
@@ -164,7 +157,6 @@ public class Game {
 			e.printStackTrace();
 		}
 
-		// resetGame();
 		if (menu == null)
 			setMenu(new TitleMenu());
 	}
@@ -213,14 +205,14 @@ public class Game {
 				lastTimer1 += 1000;
 				Log.v(Game.NAME, frames + " fps");
 				frames = 0;
-				
+
 				t.setToNow();
 
 				Intent bat = GameActivity.singleton.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 				int level = bat.getIntExtra("level", 0);
 				int scale = bat.getIntExtra("scale", 100);
 				int battery = level * 100 / scale;
-				
+
 				status = battery + "% " + t.hour + ":" + t.minute;
 			}
 		}
@@ -266,7 +258,7 @@ public class Game {
 	}
 
 	public void render(android.graphics.Canvas canvas) {
-		// player and level are null when in the main menu 
+		// player and level are null when in the main menu
 		if (player != null && level != null) {
 			int xScroll = player.x - screen.w / 2;
 			int yScroll = player.y - (screen.h - 8) / 2;
@@ -296,8 +288,8 @@ public class Game {
 			}
 			renderGui();
 		}
-		//else {
-		if(menu != null) {
+
+		if (menu != null) {
 			menu.render(screen);
 		}
 
@@ -350,8 +342,6 @@ public class Game {
 		pendingLevelChange = dir;
 	}
 
-	// NOTE: main moved to GameActivity
-
 	public void won() {
 		wonTimer = 60 * 3;
 		hasWon = true;
@@ -362,9 +352,9 @@ public class Game {
 	}
 
 	public void save() {
-		if(player == null || level == null)
+		if (player == null || level == null)
 			return;
-		
+
 		if (mExternalStorageWriteable) {
 			try {
 				File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
@@ -396,18 +386,18 @@ public class Game {
 				os.flush();
 				os.close();
 				Log.w("DEBUG", "saved state");
-				
+
 				Context context = ctxt.getApplicationContext();
 				CharSequence text = "Game saved!";
 				int duration = Toast.LENGTH_SHORT;
 
 				Toast toast = Toast.makeText(context, text, duration);
 				toast.show();
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 				Log.e("ExternalStorage", "Error saving save-state");
-				
+
 				Context context = ctxt.getApplicationContext();
 				CharSequence text = "Couldn't access file system. Saving failed";
 				int duration = Toast.LENGTH_SHORT;
@@ -454,14 +444,6 @@ public class Game {
 			Log.w("DEBUG", "Loaded levels, took " + ((float) finishTime / (float) 1000000000) + " seconds");
 			level = levels[currentLevel];
 			level.player = player;
-
-			// player.findStartPos(level);
-
-			// level.add(player);
-
-			// for (int i = 0; i < 5; i++) {
-			// levels[i].trySpawn(5000);
-			// }
 
 			is.close();
 		} else

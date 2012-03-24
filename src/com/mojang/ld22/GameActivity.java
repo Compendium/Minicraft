@@ -13,12 +13,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 
-/**
- * Adapted from lunar lander example
- * 
- * @author schneg
- * 
- */
 public class GameActivity extends Activity implements OnTouchListener {
 	public Game game = null;
 	private GameView gameView;
@@ -98,19 +92,14 @@ public class GameActivity extends Activity implements OnTouchListener {
 			game.startRun(this);
 			gameThread.start();
 			shouldRun = true;
-			
+
 			saved = false;
 		}
 		Log.w("DEBUG", "Resumed!");
-		// this.onCreate(null);
 	}
 
 	@Override
 	protected void onPause() {
-		// Log.e("ON PAUSE!!!!!!!!!!!!!!!", "ON PAUSE!!!!!!!!!!!!!!!");
-		// shouldRun = false;
-		// gameThread.stop();
-		// gameThread.stop();
 		super.onPause();
 		game.stop();
 		Log.w("DEBUG", "Paused!");
@@ -118,7 +107,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 			saved = true;
 			game.save();
 		}
-		// this.finish(); //un-intuitive?
 	}
 
 	@Override
@@ -131,7 +119,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 			saved = true;
 			game.save();
 		}
-		// this.finish(); //un-intuitive?
 	};
 
 	@Override
@@ -160,10 +147,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 	int attackId = -1;
 	int menuId = -1;
-
-	/*
-	 * @Override public boolean onTouchEvent(MotionEvent ev) { return onTouch(null, ev); }
-	 */
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {

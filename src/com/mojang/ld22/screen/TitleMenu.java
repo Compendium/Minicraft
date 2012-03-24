@@ -11,26 +11,26 @@ import com.mojang.ld22.gfx.Screen;
 public class TitleMenu extends Menu {
 	private int selected = 0;
 
-	private static String[] options ;
+	private static String[] options;
 
 	boolean saveExists = false;
 
 	public TitleMenu() {
 
 	}
-	
+
 	public void init(Game game, InputHandler input) {
 		this.input = input;
 		this.game = game;
-		
+
 		if (game.mExternalStorageAvailable) {
 			File file = new File(game.ctxt.getExternalFilesDir(null), "save.obj");
 			saveExists = file.exists();
 		} else {
 			saveExists = false;
 		}
-		
-		if(saveExists)
+
+		if (saveExists)
 			options = new String[] { "Load game", "Start new game", "How to play", "About" };
 		else
 			options = new String[] { "Start game", "How to play", "About" };
@@ -49,47 +49,28 @@ public class TitleMenu extends Menu {
 			selected -= len;
 
 		if (input.attack.clicked || input.menu.clicked) {
-			if(selected == 0)
-			{
-				if(saveExists)
+			if (selected == 0) {
+				if (saveExists)
 					game.setMenu(new LoadingMenu(LoadingMenu.LOADGAME));
 				else
 					game.setMenu(new LoadingMenu(LoadingMenu.NEWGAME));
 			}
-			if(selected == 1)
-			{
-				if(saveExists)
+			if (selected == 1) {
+				if (saveExists)
 					game.setMenu(new LoadingMenu(LoadingMenu.NEWGAME));
 				else
 					game.setMenu(new InstructionsMenu(this));
 			}
-			if(selected == 2)
-			{
-				if(saveExists)
+			if (selected == 2) {
+				if (saveExists)
 					game.setMenu(new InstructionsMenu(this));
 				else
 					game.setMenu(new AboutMenu(this));
 			}
-			if(selected == 3)
-			{
-				if(saveExists)
+			if (selected == 3) {
+				if (saveExists)
 					game.setMenu(new AboutMenu(this));
 			}
-			
-//			if (selected == 0) {
-//				game.setMenu(new LoadingMenu(0));
-//				// Sound.tick.play();
-//				// game.resetGame();
-//				// game.setMenu(null);
-//				// game.setMenu(new LoadingMenu());
-//			}
-//			if (selected == 1) {
-//				game.setMenu(new LoadingMenu(1));
-//			}
-//			if (selected == 2)
-//				game.setMenu(new InstructionsMenu(this));
-//			if (selected == 3)
-//				game.setMenu(new AboutMenu(this));
 		}
 	}
 
