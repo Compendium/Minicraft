@@ -34,7 +34,7 @@ public class Level implements Serializable {
 	private int depth;
 	public int monsterDensity = 8;
 
-	public List<Entity> rowSprites = new ArrayList<Entity>();
+	transient public List<Entity> rowSprites = new ArrayList<Entity>();
 
 	transient public Player player;
 
@@ -152,6 +152,7 @@ public class Level implements Serializable {
 			}
 
 		};
+		rowSprites = new ArrayList<Entity>();
 	}
 
 	public void renderBackground(Screen screen, int xScroll, int yScroll) {

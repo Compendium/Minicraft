@@ -11,6 +11,8 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.sound.Sound;
 
 public class LoadingMenu extends Menu {
+	public static final int NEWGAME = 0;
+	public static final int LOADGAME = 1;
 	public boolean displayed = false;
 	private int intent = 0;
 

@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.os.Environment;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.Toast;
 import android.content.Intent;
 
 import com.mojang.ld22.entity.Player;
@@ -56,8 +57,8 @@ public class Game {
 	private int wonTimer = 0;
 	public boolean hasWon = false;
 
-	boolean mExternalStorageAvailable = false;
-	boolean mExternalStorageWriteable = false;
+	public boolean mExternalStorageAvailable = false;
+	public boolean mExternalStorageWriteable = false;
 	String mExtStorageState;
 	
 	String status = "";
@@ -198,7 +199,7 @@ public class Game {
 			}
 
 			try {
-				Thread.sleep(1);
+				Thread.sleep(2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -251,7 +252,6 @@ public class Game {
 			}
 			level.tick();
 			Tile.tickCount++;
-			Log.w("DEBUG", "ticked");
 		}
 	}
 
@@ -266,7 +266,8 @@ public class Game {
 	}
 
 	public void render(android.graphics.Canvas canvas) {
-		if (menu == null) {
+		// player and level are null when in the main menu 
+		if (player != null && level != null) {
 			int xScroll = player.x - screen.w / 2;
 			int yScroll = player.y - (screen.h - 8) / 2;
 			if (xScroll < 16)
@@ -294,7 +295,9 @@ public class Game {
 				screen.overlay(lightScreen, xScroll, yScroll);
 			}
 			renderGui();
-		} else {
+		}
+		//else {
+		if(menu != null) {
 			menu.render(screen);
 		}
 
@@ -359,10 +362,13 @@ public class Game {
 	}
 
 	public void save() {
+		if(player == null || level == null)
+			return;
+		
 		if (mExternalStorageWriteable) {
 			try {
 				File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
-				Log.w("DEBUG", file.getPath() + " | " + file.toString());
+				Log.w("DEBUG", file.getPath());
 				FileOutputStream fos = new FileOutputStream(file, false);
 				ObjectOutputStream os = new ObjectOutputStream(fos);
 
@@ -390,9 +396,24 @@ public class Game {
 				os.flush();
 				os.close();
 				Log.w("DEBUG", "saved state");
+				
+				Context context = ctxt.getApplicationContext();
+				CharSequence text = "Game saved!";
+				int duration = Toast.LENGTH_SHORT;
+
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 				Log.e("ExternalStorage", "Error saving save-state");
+				
+				Context context = ctxt.getApplicationContext();
+				CharSequence text = "Couldn't access file system. Saving failed";
+				int duration = Toast.LENGTH_SHORT;
+
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
 			}
 		}
 	}
@@ -402,10 +423,9 @@ public class Game {
 			File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
 			if (!file.exists())
 				throw new IOException("Savegame doesn't exist");
-			Log.w("DEBUG", file.getPath() + " | " + file.toString());
+			Log.w("DEBUG", file.getPath());
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream is = new ObjectInputStream(fis);
-			// TODO load stuff here
 			// playerDeadTime = is.readInt();
 			// wonTimer = is.readInt();
 			// gameTime = is.readInt();

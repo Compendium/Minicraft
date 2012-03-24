@@ -1,5 +1,7 @@
 package com.mojang.ld22;
 
+import com.mojang.ld22.screen.TitleMenu;
+
 import oz.wizards.minicraft.R;
 import android.app.Activity;
 import android.media.AudioManager;
@@ -24,6 +26,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 	private Thread gameThread;
 
 	private boolean shouldRun = true;
+	private boolean saved = false;
 
 	public static GameActivity singleton;
 
@@ -91,9 +94,12 @@ public class GameActivity extends Activity implements OnTouchListener {
 					}
 				}
 			});
+			game.setMenu(new TitleMenu());
+			game.startRun(this);
 			gameThread.start();
 			shouldRun = true;
-			game.start();
+			
+			saved = false;
 		}
 		Log.w("DEBUG", "Resumed!");
 		// this.onCreate(null);
@@ -108,6 +114,10 @@ public class GameActivity extends Activity implements OnTouchListener {
 		super.onPause();
 		game.stop();
 		Log.w("DEBUG", "Paused!");
+		if (saved == false) {
+			saved = true;
+			game.save();
+		}
 		// this.finish(); //un-intuitive?
 	}
 
@@ -117,6 +127,10 @@ public class GameActivity extends Activity implements OnTouchListener {
 		shouldRun = false;
 		game.stop();
 		Log.w("DEBUG", "Stopped!");
+		if (saved == false) {
+			saved = true;
+			game.save();
+		}
 		// this.finish(); //un-intuitive?
 	};
 
@@ -126,6 +140,10 @@ public class GameActivity extends Activity implements OnTouchListener {
 		shouldRun = false;
 		game.stop();
 		Log.w("DEBUG", "Destroyed!");
+		if (saved == false) {
+			saved = true;
+			game.save();
+		}
 	};
 
 	@Override
@@ -194,27 +212,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 					game.getInputHandler().keyEvent(InputHandler.MENU, false);
 				}
 			}
-			if (actionCode == MotionEvent.ACTION_MOVE) {
-				// // cursor moved outside of pad
-				// if (cursorId != INVALID_POINTER_ID && event.getX(cursorId) >
-				// gameView.getWidth() / 2)
-				// {
-				// cursorPressed = false;
-				// cursorId = INVALID_POINTER_ID;
-				// }
-				// // secondary cursor moved inside of pad, and if we currently
-				// // have no
-				// // pointer associated to the pad promote it
-				// for (int i = 0; i < event.getPointerCount(); i++)
-				// {
-				// if (event.getX(i) < gameView.getWidth() / 2)
-				// {
-				// cursorPressed = true;
-				// cursorId = event.getPointerId(i);// action >>
-				// // MotionEvent.ACTION_POINTER_ID_SHIFT;
-				// }
-				// }
-			}
+
 			// Log.i("DEBUG", "Cursor is " + (cursorPressed ? ("pressed, is is "
 			// + cursorId + ", position is V(" + event.getX(cursorId) + " | " +
 			// event.getY(cursorId) + ")") : "released"));
@@ -227,32 +225,29 @@ public class GameActivity extends Activity implements OnTouchListener {
 				angle = (float) Math.toDegrees(angle);
 				if (angle < 0)
 					angle += 360.0f;
-				// Log.i("angle", "" + (angle));
 
-				{
-					if (range(202.5f, angle, 337.5f)) {
-						if (!game.getInputHandler().isDown(InputHandler.UP))
-							game.getInputHandler().keyEvent(InputHandler.UP, true);
-					} else if (range(157.5f, angle, 22.5)) {
-						if (!game.getInputHandler().isDown(InputHandler.DOWN))
-							game.getInputHandler().keyEvent(InputHandler.DOWN, true);
-					} else {
-						game.getInputHandler().keyEvent(InputHandler.UP, false);
-						game.getInputHandler().keyEvent(InputHandler.DOWN, false);
-					}
-
-					if (range(112.5f, angle, 247.5f)) {
-						if (!game.getInputHandler().isDown(InputHandler.LEFT))
-							game.getInputHandler().keyEvent(InputHandler.LEFT, true);
-					} else if ((range(292.5f, angle, 360) || range(0, angle, 67.5f))) {
-						if (!game.getInputHandler().isDown(InputHandler.RIGHT))
-							game.getInputHandler().keyEvent(InputHandler.RIGHT, true);
-					} else {
-						game.getInputHandler().keyEvent(InputHandler.RIGHT, false);
-						game.getInputHandler().keyEvent(InputHandler.LEFT, false);
-					}
-
+				if (range(202.5f, angle, 337.5f)) {
+					if (!game.getInputHandler().isDown(InputHandler.UP))
+						game.getInputHandler().keyEvent(InputHandler.UP, true);
+				} else if (range(157.5f, angle, 22.5)) {
+					if (!game.getInputHandler().isDown(InputHandler.DOWN))
+						game.getInputHandler().keyEvent(InputHandler.DOWN, true);
+				} else {
+					game.getInputHandler().keyEvent(InputHandler.UP, false);
+					game.getInputHandler().keyEvent(InputHandler.DOWN, false);
 				}
+
+				if (range(112.5f, angle, 247.5f)) {
+					if (!game.getInputHandler().isDown(InputHandler.LEFT))
+						game.getInputHandler().keyEvent(InputHandler.LEFT, true);
+				} else if ((range(292.5f, angle, 360) || range(0, angle, 67.5f))) {
+					if (!game.getInputHandler().isDown(InputHandler.RIGHT))
+						game.getInputHandler().keyEvent(InputHandler.RIGHT, true);
+				} else {
+					game.getInputHandler().keyEvent(InputHandler.RIGHT, false);
+					game.getInputHandler().keyEvent(InputHandler.LEFT, false);
+				}
+
 			}
 		}
 		return true;
