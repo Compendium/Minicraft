@@ -150,23 +150,28 @@ public class Game {
 
 
 		levels[4] = new Level(128, 128, 1, null);
-		percentage += 20;
+		percentage += 18;
 		levels[3] = new Level(128, 128, 0, levels[4]);
-		percentage += 20;
+		percentage += 18;
 		levels[2] = new Level(128, 128, -1, levels[3]);
-		percentage += 20;
+		percentage += 18;
 		levels[1] = new Level(128, 128, -2, levels[2]);
-		percentage += 20;
+		percentage += 18;
 		levels[0] = new Level(128, 128, -3, levels[1]);
-		percentage += 20;
+		percentage += 18;
 		level = levels[currentLevel];
+		percentage += 1;
 		player = new Player(this, input);
+		percentage += 1;
 		player.findStartPos(level);
+		percentage += 2;
 
 		level.add(player);
-
+		percentage += 1;
+		
 		for (int i = 0; i < 5; i++) {
 			levels[i].trySpawn(5000);
+			percentage += 1;
 		}
 	}
 
@@ -435,6 +440,7 @@ public class Game {
 				throw new IOException("Savegame doesn't exist");
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream is = new ObjectInputStream(fis);
+			percentage = 2;
 			// playerDeadTime = is.readInt();
 			// wonTimer = is.readInt();
 			// gameTime = is.readInt();
@@ -443,8 +449,10 @@ public class Game {
 			wonTimer = 0;
 			gameTime = 0;
 			hasWon = false;
+			percentage += 1;
 
 			currentLevel = is.readInt();
+			percentage += 2;
 
 			player = (Player) is.readObject();
 			player.game = this;
@@ -452,18 +460,25 @@ public class Game {
 			player.stamina = player.maxStamina;
 			player.staminaRecharge = 0;
 			player.staminaRechargeDelay = 40;
+			
+			percentage += 5;
 
 			long starTime = System.nanoTime();
 			for (int i = 0; i < levels.length; i++) {
 				levels[i] = (Level) is.readObject();
+				percentage += 10;
 				levels[i].reset();
+				percentage += 6;
 			}
+			percentage += 5;
 			long finishTime = System.nanoTime() - starTime;
 			Log.w("DEBUG", "Loaded levels, took " + ((float) finishTime / (float) 1000000000) + " seconds");
 			level = levels[currentLevel];
 			level.player = player;
+			percentage += 3;
 
 			is.close();
+			percentage += 2;
 		} else
 			throw new IOException("Cannot access file system");
 	}

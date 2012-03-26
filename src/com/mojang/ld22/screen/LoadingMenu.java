@@ -73,11 +73,11 @@ public class LoadingMenu extends Menu {
 		screen.clear(0);
 		String msg1 = "Loading";
 		String msg2 = "Please be patient ";
-		String msg2heart = "" + 0x07;
 		
 		Font.draw(msg1, screen, screen.w / 2 - (msg1.length() * 8 / 2), screen.h / 2 - 4, Color.get(0, 111, 111, 111));
 		Font.draw(msg2, screen, screen.w / 2 - (msg2.length() * 8 / 2), screen.h / 2 - 4 + 8, Color.get(0, 111, 111, 111));
-		Font.draw(msg2heart, screen, (screen.w / 2 - (msg2.length() * 8 / 2)) + (msg2.length() * 8), screen.h / 2 - 4 + 8, Color.get(000, 200, 500, 533));
+		screen.render((screen.w / 2 - (msg2.length() * 8 / 2)) + (msg2.length() * 8), screen.h / 2 - 4 + 8, 0 + 12 * 32, Color.get(000, 200, 500, 533), 0);
+		
 		
 		float steps = (screen.w / 8) - 2;
 		float stepsize = steps / 100.f;
@@ -93,7 +93,7 @@ public class LoadingMenu extends Menu {
 			
 			Font.draw("|", screen, i, screen.h/2 - 4 + 8*2, c);
 		}
-		String percentage = game.percentage + "";
+		String percentage = Integer.toString(game.percentage);
 		Font.draw(percentage, screen, screen.w / 2 - (percentage.length() * 8 / 2), screen.h / 2 - 4 + 8*2, Color.get(-1, 555, 555, 555));
 	}
 }
