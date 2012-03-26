@@ -73,7 +73,12 @@ public class GameActivity extends Activity implements OnTouchListener {
 	protected void onResume() {
 		super.onResume();
 		if (shouldRun == false) {
-			gameThread.interrupt();
+			DisplayMetrics metrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			game = new Game(metrics.widthPixels, metrics.heightPixels);
+
+			gameView = (GameView) findViewById(R.id.gameView);
+			gameView.setOnTouchListener(this);
 			gameThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -101,12 +106,11 @@ public class GameActivity extends Activity implements OnTouchListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		shouldRun = false;
 		game.stop();
 		Log.w("DEBUG", "Paused!");
-		if (saved == false) {
-			saved = true;
-			game.save();
-		}
+		considerSaving();
+
 	}
 
 	@Override
@@ -115,10 +119,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 		shouldRun = false;
 		game.stop();
 		Log.w("DEBUG", "Stopped!");
-		if (saved == false) {
-			saved = true;
-			game.save();
-		}
+		considerSaving();
 	};
 
 	@Override
@@ -127,11 +128,18 @@ public class GameActivity extends Activity implements OnTouchListener {
 		shouldRun = false;
 		game.stop();
 		Log.w("DEBUG", "Destroyed!");
+		considerSaving();
+		this.finish();
+	};
+
+	private void considerSaving() {
 		if (saved == false) {
 			saved = true;
+
 			game.save();
+			game.saveSettings();
 		}
-	};
+	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -158,13 +166,13 @@ public class GameActivity extends Activity implements OnTouchListener {
 			if (actionCode == MotionEvent.ACTION_DOWN || actionCode == MotionEvent.ACTION_POINTER_DOWN) {
 				boolean match = false;
 				for (int i = 0; i < event.getPointerCount(); i++) {
-					if (event.getX(i) < gameView.getWidth() / 2) {
+					if ((game.settings.controlshflipped ? event.getX(i) > gameView.getWidth() / 2 : event.getX(i) < gameView.getWidth() / 2)) {
 						match = true;
 						cursorPressed = true;
 						cursorId = event.getPointerId(i); // action >>
 															// MotionEvent.ACTION_POINTER_ID_SHIFT;
 					}
-					if (event.getX(i) > gameView.getWidth() / 2) {
+					if ((game.settings.controlshflipped ? event.getX(i) < gameView.getWidth() / 2 : event.getX(i) > gameView.getWidth() / 2)) {
 						if (event.getY(i) < gameView.getHeight() / 2) {
 							game.getInputHandler().keyEvent(InputHandler.MENU, true);
 							menuId = event.getPointerId(i);
@@ -204,7 +212,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 				cursorY = event.getY(cursorId);
 
 				float angle = 0.0f;
-				angle = (float) Math.atan2(cursorY - gameView.getHeight() / 2, cursorX - gameView.getWidth() / 5);
+				angle = (float) Math.atan2(cursorY - gameView.getHeight() / 2, cursorX - (game.settings.controlshflipped ? gameView.getWidth() - gameView.getWidth() / 5 : gameView.getWidth() / 5));
 				angle = (float) Math.toDegrees(angle);
 				if (angle < 0)
 					angle += 360.0f;

@@ -172,12 +172,11 @@ public class Player extends Mob  {
 	}
 
 	private void attack() {
-		Log.w("DEBUG", "player sound");
-		Sound.hit1.play();
 		walkDist += 8;
 		attackDir = dir;
 		attackItem = activeItem;
 		boolean done = false;
+		boolean hit = false;
 
 		if (activeItem != null) {
 			attackTime = 10;
@@ -221,7 +220,10 @@ public class Player extends Mob  {
 		}
 
 		if (done)
+		{
+			Log.w("DEBUG", "case 1");
 			return;
+		}
 
 		if (activeItem == null || activeItem.canAttack()) {
 			attackTime = 5;
@@ -250,6 +252,11 @@ public class Player extends Mob  {
 
 			if (xt >= 0 && yt >= 0 && xt < level.w && yt < level.h) {
 				level.getTile(xt, yt).hurt(level, xt, yt, this, random.nextInt(3) + 1, attackDir);
+				Log.w("DEBUG", "case 2");
+			}
+			else
+			{
+				Log.w("DEBUG", "case 3");
 			}
 		}
 

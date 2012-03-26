@@ -35,6 +35,7 @@ import com.mojang.ld22.screen.WonMenu;
 public class Game {
 	public Context ctxt;
 	public static final String NAME = "Minicraft";
+	public Settings settings;
 	private static final int HEIGHT = 120;
 	private static int WIDTH = 160;
 	private static int SCALE;
@@ -57,8 +58,8 @@ public class Game {
 	private int wonTimer = 0;
 	public boolean hasWon = false;
 
-	public boolean mExternalStorageAvailable = false;
-	public boolean mExternalStorageWriteable = false;
+	public boolean externalStorageAvailable = false;
+	public boolean externalStorageWriteable = false;
 	String mExtStorageState;
 
 	String status = "";
@@ -89,16 +90,35 @@ public class Game {
 		mExtStorageState = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(mExtStorageState)) {
 			// We can read and write the media
-			mExternalStorageAvailable = mExternalStorageWriteable = true;
+			externalStorageAvailable = externalStorageWriteable = true;
 		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(mExtStorageState)) {
 			// We can only read the media
-			mExternalStorageAvailable = true;
-			mExternalStorageWriteable = false;
+			externalStorageAvailable = true;
+			externalStorageWriteable = false;
 		} else {
 			// Something else is wrong. It may be one of many other states, but
 			// all we need
 			// to know is we can neither read nor write
-			mExternalStorageAvailable = mExternalStorageWriteable = false;
+			externalStorageAvailable = externalStorageWriteable = false;
+		}
+
+		try {
+			loadSettings();
+		} catch (StreamCorruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(settings == null)
+		{
+			settings = new Settings();
+			Log.w("DEBUG", "created new settings");
 		}
 
 	}
@@ -303,6 +323,9 @@ public class Game {
 
 	private void renderGui() {
 		// crosshair for center of controls
+		if(settings.controlshflipped)
+			screen.render(screen.w - ((screen.w / 5)), (screen.h / 2), 32-1, Color.get(-1, 222, 333, 444), 0);
+		else
 		screen.render(((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
 
 		// black bar on bottom
@@ -355,7 +378,7 @@ public class Game {
 		if (player == null || level == null)
 			return;
 
-		if (mExternalStorageWriteable) {
+		if (externalStorageWriteable) {
 			try {
 				File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
 				Log.w("DEBUG", file.getPath());
@@ -385,7 +408,6 @@ public class Game {
 
 				os.flush();
 				os.close();
-				Log.w("DEBUG", "saved state");
 
 				Context context = ctxt.getApplicationContext();
 				CharSequence text = "Game saved!";
@@ -409,7 +431,7 @@ public class Game {
 	}
 
 	public void load() throws ClassNotFoundException, StreamCorruptedException, IOException {
-		if (mExternalStorageAvailable) {
+		if (externalStorageAvailable) {
 			File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
 			if (!file.exists())
 				throw new IOException("Savegame doesn't exist");
@@ -448,5 +470,45 @@ public class Game {
 			is.close();
 		} else
 			throw new IOException("Cannot access file system");
+	}
+	
+	public void saveSettings () {
+		if (externalStorageWriteable) {
+			try {
+				File file = new File(ctxt.getExternalFilesDir(null), "settings.obj");
+				Log.w("DEBUG", file.getPath());
+				FileOutputStream fos = new FileOutputStream(file, false);
+				ObjectOutputStream os = new ObjectOutputStream(fos);
+				os.writeObject(settings);
+				os.flush();
+				os.close();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				Log.e("ExternalStorage", "Error saving save-state");
+
+				Context context = ctxt.getApplicationContext();
+				CharSequence text = "Couldn't access file system. Saving settings failed";
+				int duration = Toast.LENGTH_SHORT;
+
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
+			}
+		}
+	}
+	
+	public void loadSettings () throws ClassNotFoundException, StreamCorruptedException, IOException {
+		if(externalStorageAvailable)
+		{
+			File file = new File(ctxt.getExternalFilesDir(null), "settings.obj");
+			if(!file.exists())
+				throw new IOException("Couldn't load settings");
+			Log.w("DEBUG", file.getPath());
+			FileInputStream fis = new FileInputStream(file);
+			ObjectInputStream is = new ObjectInputStream(fis);
+			settings = (Settings) is.readObject();
+			is.close();
+		}
 	}
 }

@@ -10,8 +10,8 @@ import com.mojang.ld22.gfx.Screen;
 
 public class TitleMenu extends Menu {
 	private int selected = 0;
-
 	private static String[] options;
+	private static int offset;
 
 	boolean saveExists = false;
 
@@ -23,17 +23,20 @@ public class TitleMenu extends Menu {
 		this.input = input;
 		this.game = game;
 
-		if (game.mExternalStorageAvailable) {
+		if (game.externalStorageAvailable) {
 			File file = new File(game.ctxt.getExternalFilesDir(null), "save.obj");
 			saveExists = file.exists();
 		} else {
 			saveExists = false;
 		}
 
-		if (saveExists)
-			options = new String[] { "Load game", "Start new game", "How to play", "About" };
-		else
-			options = new String[] { "Start game", "How to play", "About" };
+		if (saveExists) {
+			options = new String[] { "Load game", "Start new game", "Settings", "How to play", "About" };
+			offset = 0;
+		} else {
+			options = new String[] { "Start game", "Settings", "How to play", "About" };
+			offset = 1;
+		}
 	}
 
 	public void tick() {
@@ -49,27 +52,17 @@ public class TitleMenu extends Menu {
 			selected -= len;
 
 		if (input.attack.clicked || input.menu.clicked) {
+			selected += offset;
 			if (selected == 0) {
-				if (saveExists)
-					game.setMenu(new LoadingMenu(LoadingMenu.LOADGAME));
-				else
-					game.setMenu(new LoadingMenu(LoadingMenu.NEWGAME));
-			}
-			if (selected == 1) {
-				if (saveExists)
-					game.setMenu(new LoadingMenu(LoadingMenu.NEWGAME));
-				else
-					game.setMenu(new InstructionsMenu(this));
-			}
-			if (selected == 2) {
-				if (saveExists)
-					game.setMenu(new InstructionsMenu(this));
-				else
-					game.setMenu(new AboutMenu(this));
-			}
-			if (selected == 3) {
-				if (saveExists)
-					game.setMenu(new AboutMenu(this));
+				game.setMenu(new LoadingMenu(this, LoadingMenu.LOADGAME));
+			} else if (selected == 1) {
+				game.setMenu(new LoadingMenu(this, LoadingMenu.NEWGAME));
+			} else if (selected == 2) {
+				game.setMenu(new SettingsMenu(this));
+			} else if (selected == 3) {
+				game.setMenu(new InstructionsMenu(this));
+			} else if (selected == 4) {
+				game.setMenu(new AboutMenu(this));
 			}
 		}
 	}

@@ -11,12 +11,14 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.sound.Sound;
 
 public class LoadingMenu extends Menu {
+	private Menu parent;
 	public static final int NEWGAME = 0;
 	public static final int LOADGAME = 1;
 	public boolean displayed = false;
 	private int intent = 0;
 
-	public LoadingMenu(int i) {
+	public LoadingMenu(Menu parent, int i) {
+		this.parent = parent;
 		intent = i;
 	}
 
@@ -43,7 +45,7 @@ public class LoadingMenu extends Menu {
 				if (success)
 					game.setMenu(null);
 				else
-					game.setMenu(new TitleMenu());
+					game.setMenu(parent);
 			}
 		}
 	}
