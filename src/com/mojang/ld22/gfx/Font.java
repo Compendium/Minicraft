@@ -2,7 +2,7 @@ package com.mojang.ld22.gfx;
 
 public class Font {
 	private static String chars = "" + //
-			"ABCDEFGHIJKLMNOPQRSTUVWXYZ|     " + //
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZ|"+ 0x07 + "    " + //
 			"0123456789.,!?'\"-+=/\\%()<>:;     " + //
 			"";
 
