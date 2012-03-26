@@ -1,7 +1,5 @@
 package com.mojang.ld22.screen;
 
-import android.util.Log;
-
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
@@ -41,7 +39,6 @@ public class InventoryMenu extends Menu {
 		if (input.attack.clicked && len > 0) {
 			if (player.inventory.items.get(selected) instanceof SaveStone) {
 				game.save();
-				Log.w("DEBUG", "saved");
 				game.setMenu(null);
 			} else {
 				Item item = player.inventory.items.remove(selected);

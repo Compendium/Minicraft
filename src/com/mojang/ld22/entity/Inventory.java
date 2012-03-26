@@ -34,7 +34,13 @@ public class Inventory  implements Serializable {
 		for (int i = 0; i < items.size(); i++) {
 			if (items.get(i) instanceof ResourceItem) {
 				ResourceItem has = (ResourceItem) items.get(i);
-				if (has.resource == resource) return has;
+				//the (dalvik) jvm seems to be using a kind of id system where every object instance is assinged it's own id,
+				//so after serializing the old objects keep their id and the new objects get a new id and object isn't the same as object anymore
+				//therefore check the name here, or write a .equals(Object o) method that ignores this id and use has.resource.equals(resource)?
+				if (has.resource == resource || has.resource.name.equals(resource.name))
+				{
+					return has;
+				}
 			}
 		}
 		return null;

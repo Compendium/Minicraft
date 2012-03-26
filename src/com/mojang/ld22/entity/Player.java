@@ -2,9 +2,6 @@ package com.mojang.ld22.entity;
 
 import java.util.List;
 
-
-import android.util.Log;
-
 import com.mojang.ld22.Game;
 import com.mojang.ld22.InputHandler;
 import com.mojang.ld22.entity.particle.TextParticle;
@@ -19,7 +16,7 @@ import com.mojang.ld22.level.tile.Tile;
 import com.mojang.ld22.screen.InventoryMenu;
 import com.mojang.ld22.sound.Sound;
 
-public class Player extends Mob  {
+public class Player extends Mob {
 	private static final long serialVersionUID = 5731015095280941774L;
 	transient public InputHandler input;
 	private int attackTime, attackDir;
@@ -32,6 +29,7 @@ public class Player extends Mob  {
 	public int staminaRecharge;
 	public int staminaRechargeDelay;
 	private long attackDelay = 0;
+	private long attackRepeatDelay = 0;
 	public int score;
 	public final int maxStamina = 10;
 	private int onStairDelay;
@@ -112,10 +110,13 @@ public class Player extends Mob  {
 		if (input.attack.down) {
 			if (attackDelay != 0) {
 				if (attackDelay < System.nanoTime()) {
-					if (stamina != 0) {
-						stamina--;
-						staminaRecharge = 0;
-						attack();
+					if (attackRepeatDelay < System.nanoTime()){
+						if (stamina != 0) {
+							stamina--;
+							staminaRecharge = 0;
+							attack();
+						}
+						attackRepeatDelay = (long) (System.nanoTime() + 0.05 * Math.pow(10, 9));
 					}
 				}
 			} else {
@@ -219,9 +220,7 @@ public class Player extends Mob  {
 			}
 		}
 
-		if (done)
-		{
-			Log.w("DEBUG", "case 1");
+		if (done) {
 			return;
 		}
 
@@ -252,11 +251,7 @@ public class Player extends Mob  {
 
 			if (xt >= 0 && yt >= 0 && xt < level.w && yt < level.h) {
 				level.getTile(xt, yt).hurt(level, xt, yt, this, random.nextInt(3) + 1, attackDir);
-				Log.w("DEBUG", "case 2");
-			}
-			else
-			{
-				Log.w("DEBUG", "case 3");
+			} else {
 			}
 		}
 

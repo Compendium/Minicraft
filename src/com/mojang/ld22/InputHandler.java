@@ -67,7 +67,6 @@ public class InputHandler {
 	public static final int MENU = 6;
 
 	public void keyEvent(int keyId, boolean isDown) {
-		// Log.w("keyEvent", keyId + " " + isDown);
 		switch (keyId) {
 			case UP:
 				up.toggle(isDown);

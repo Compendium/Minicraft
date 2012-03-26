@@ -65,6 +65,8 @@ public class Game {
 	String status = "";
 	Time t = new Time();
 	int battery = 0;
+	
+	public int percentage = 0;
 
 	public static int getWidth() {
 		return WIDTH;
@@ -118,7 +120,6 @@ public class Game {
 		if(settings == null)
 		{
 			settings = new Settings();
-			Log.w("DEBUG", "created new settings");
 		}
 
 	}
@@ -147,17 +148,17 @@ public class Game {
 
 		currentLevel = 3;
 
-		Log.i("Loading Level", "Loading Level 1, Stage 1");
 
 		levels[4] = new Level(128, 128, 1, null);
-		Log.i("Loading Level", "Loading Level 1, Stage 2");
+		percentage += 20;
 		levels[3] = new Level(128, 128, 0, levels[4]);
-		Log.i("Loading Level", "Loading Level 1, Stage 3");
+		percentage += 20;
 		levels[2] = new Level(128, 128, -1, levels[3]);
-		Log.i("Loading Level", "Loading Level 1, Stage 4");
+		percentage += 20;
 		levels[1] = new Level(128, 128, -2, levels[2]);
-		Log.i("Loading Level", "Loading Level 1, Stage 5");
+		percentage += 20;
 		levels[0] = new Level(128, 128, -3, levels[1]);
+		percentage += 20;
 		level = levels[currentLevel];
 		player = new Player(this, input);
 		player.findStartPos(level);
@@ -381,7 +382,6 @@ public class Game {
 		if (externalStorageWriteable) {
 			try {
 				File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
-				Log.w("DEBUG", file.getPath());
 				FileOutputStream fos = new FileOutputStream(file, false);
 				ObjectOutputStream os = new ObjectOutputStream(fos);
 
@@ -394,13 +394,11 @@ public class Game {
 				// os.writeBoolean(hasWon);
 				// Log.w("DEBUG", "3");
 				os.writeInt(currentLevel);
-				Log.w("DEBUG", "4");
 
 				os.writeObject(player);
 
 				long starTime = System.nanoTime();
 				for (int i = 0; i < levels.length; i++) {
-					Log.w("DEBUG", "Saving level " + i);
 					os.writeObject(levels[i]);
 				}
 				long finishTime = System.nanoTime() - starTime;
@@ -435,7 +433,6 @@ public class Game {
 			File file = new File(ctxt.getExternalFilesDir(null), "save.obj");
 			if (!file.exists())
 				throw new IOException("Savegame doesn't exist");
-			Log.w("DEBUG", file.getPath());
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream is = new ObjectInputStream(fis);
 			// playerDeadTime = is.readInt();
@@ -458,7 +455,6 @@ public class Game {
 
 			long starTime = System.nanoTime();
 			for (int i = 0; i < levels.length; i++) {
-				Log.i("Loading Level", "Loading Level " + i);
 				levels[i] = (Level) is.readObject();
 				levels[i].reset();
 			}

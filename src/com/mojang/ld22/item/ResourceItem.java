@@ -10,10 +10,7 @@ import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 
 public class ResourceItem extends Item {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5967012881601945296L;
+	public static final long serialVersionUID = -5967012881601945296L;
 	public Resource resource;
 	public int count = 1;
 

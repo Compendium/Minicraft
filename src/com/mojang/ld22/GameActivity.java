@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -60,13 +59,11 @@ public class GameActivity extends Activity implements OnTouchListener {
 		});
 
 		gameThread.start();
-		Log.w("DEBUG", "Created!");
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Log.w("DEBUG", "Started!");
 	}
 
 	@Override
@@ -100,7 +97,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 			saved = false;
 		}
-		Log.w("DEBUG", "Resumed!");
 	}
 
 	@Override
@@ -108,9 +104,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 		super.onPause();
 		shouldRun = false;
 		game.stop();
-		Log.w("DEBUG", "Paused!");
 		considerSaving();
-
 	}
 
 	@Override
@@ -118,7 +112,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 		super.onStop();
 		shouldRun = false;
 		game.stop();
-		Log.w("DEBUG", "Stopped!");
 		considerSaving();
 	};
 
@@ -127,8 +120,8 @@ public class GameActivity extends Activity implements OnTouchListener {
 		super.onDestroy();
 		shouldRun = false;
 		game.stop();
-		Log.w("DEBUG", "Destroyed!");
 		considerSaving();
+		
 		this.finish();
 	};
 
@@ -151,7 +144,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 	float cursorY = -1;
 	int cursorId = -1;
 	boolean cursorPressed = false;
-	private String TAG = "DEBUG";
 
 	int attackId = -1;
 	int menuId = -1;
@@ -204,7 +196,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 				}
 			}
 
-			// Log.i("DEBUG", "Cursor is " + (cursorPressed ? ("pressed, is is "
 			// + cursorId + ", position is V(" + event.getX(cursorId) + " | " +
 			// event.getY(cursorId) + ")") : "released"));
 			if (cursorId != INVALID_POINTER_ID && actionCode == MotionEvent.ACTION_MOVE) {
@@ -266,7 +257,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 				sb.append(";");
 		}
 		sb.append("]");
-		Log.d(TAG, sb.toString());
 	}
 
 	private boolean range(double a, double x, double b) {
