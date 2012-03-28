@@ -1,7 +1,5 @@
 package com.mojang.ld22.sound;
 
-import java.util.HashMap;
-
 import com.mojang.ld22.GameActivity;
 
 import oz.wizards.minicraft.R;
@@ -9,6 +7,7 @@ import oz.wizards.minicraft.R;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.util.SparseIntArray;
 
 public class Sound {
 	public static final Sound playerHurt = new Sound(R.raw.playerhurt);
@@ -23,11 +22,12 @@ public class Sound {
 	private int id;
 	
 	transient private SoundPool soundpool = new SoundPool(8, AudioManager.STREAM_MUSIC, 100);
-	transient private HashMap<Integer, Integer> soundpoolmap = new HashMap<Integer, Integer>();
+	transient private SparseIntArray soundpoolmap = new SparseIntArray();
 
 	private Sound(int ressourceID) {
 		id = ressourceID;
 		soundpoolmap.put(ressourceID, soundpool.load(GameActivity.singleton, ressourceID, 1));
+		play(0.0f);
 	}
 	
 	public void play ()

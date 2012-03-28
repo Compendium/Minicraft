@@ -29,8 +29,7 @@ public class GameView extends View {
 	}
 
 	public static void refreshCanvasSize() {
-		gameBitmap = Bitmap.createBitmap(Game.getWidth(), Game.getHeight(),
-				Bitmap.Config.ARGB_8888);
+		gameBitmap = Bitmap.createBitmap(Game.getWidth(), Game.getHeight(), Bitmap.Config.ARGB_8888);
 		gameCanvas = new Canvas(gameBitmap);
 	}
 
@@ -58,7 +57,9 @@ public class GameView extends View {
 
 			if (!loaded)
 				initMeasure();
-
+//			while (GameActivity.singleton.game.surfacedrawn == false) {
+//			}
+//			;
 			canvas.drawBitmap(gameBitmap, source, dest, drawPaint);
 			// canvas.drawBitmap(gameBitmap, 0, 0, null);
 			// mCanvas.drawBitmap(mBitmap, 0,0,null);

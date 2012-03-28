@@ -1,5 +1,7 @@
 package com.mojang.ld22.gfx;
 
+import android.util.Log;
+
 public class Screen {
 	public int xOffset;
 	public int yOffset;
@@ -41,6 +43,156 @@ public class Screen {
 	public void clear(int color) {
 		for (int i = 0; i < pixels.length; i++)
 			pixels[i] = color;
+	}
+
+	public void renderRect(int xp, int yp, int xs, int ys, int colors) {
+		// xp -= xOffset;
+		// yp -= yOffset;
+		int col = colors & 255;
+		for (int x = xp; x < xp + xs; x++) {
+			for (int y = yp; y < yp + ys; y++) {
+				if ((x < w && y < h))
+					pixels[x + y * w] = col;
+
+			}
+		}
+	}
+
+	public void renderLine(int x1, int x2, int y1, int y2, int color) {
+		int c = color;
+		int deltax = Math.abs(x2 - x1);
+		int deltay = Math.abs(y2 - y1);
+		int x = x1;
+		int y = y1;
+
+		int xinc1, xinc2, yinc1, yinc2;
+		if (x2 >= x1) {
+			xinc1 = 1;
+			xinc2 = 1;
+		} else {
+			xinc1 = -1;
+			xinc2 = -1;
+		}
+
+		if (y2 >= y1) {
+			yinc1 = 1;
+			yinc2 = 1;
+		} else {
+			yinc1 = -1;
+			yinc2 = -1;
+		}
+
+		int den, num, numadd, numpixels;
+		if (deltax >= deltay) {
+			xinc1 = 0;
+			yinc2 = 0;
+			den = deltax;
+			num = deltax / 2;
+			numadd = deltay;
+			numpixels = deltax;
+		} else {
+			xinc2 = 0;
+			yinc1 = 0;
+			den = deltay;
+			num = deltay / 2;
+			numadd = deltax;
+			numpixels = deltay;
+		}
+
+		for (int curpixel = 0; curpixel <= numpixels; curpixel++) {
+			if (color == -1)
+				invertPixel(x, y, c);
+			else
+				setPixel(x, y, color);
+			num += numadd;
+			if (num >= den) {
+				num -= den;
+				x += xinc1;
+				y += yinc1;
+			}
+			x += xinc2;
+			y += yinc2;
+		}
+	}
+
+	// thanks to Bresenham!
+	public void renderCircle(int x0, int y0, int radius, int color) {
+		int f = 1 - radius;
+		int ddF_x = 1;
+		int ddF_y = -2 * radius;
+		int x = 0;
+		int y = radius;
+
+		// setPixel(x0, y0 + radius, color);
+		// setPixel(x0, y0 - radius, color);
+		// setPixel(x0 + radius, y0, color);
+		// setPixel(x0 - radius, y0, color);
+		renderLine(x0, x0, y0 + radius, y0 - radius, color);
+		renderLine(x0 - radius, x0 + radius, y0, y0, color);
+
+		if (color == -1) {
+			while (x < y) {
+				if (f >= 0) {
+					y--;
+					ddF_y += 2;
+					f += ddF_y;
+				}
+				x++;
+				ddF_x += 2;
+				f += ddF_x;
+
+				invertPixel(x0 + x, y0 + y, color);
+				invertPixel(x0 - x, y0 + y, color);
+
+				invertPixel(x0 + x, y0 - y, color);
+				invertPixel(x0 - x, y0 - y, color);
+
+				invertPixel(x0 + y, y0 + x, color);
+				invertPixel(x0 - y, y0 + x, color);
+
+				invertPixel(x0 + y, y0 - x, color);
+				invertPixel(x0 - y, y0 - x, color);
+			}
+		} else {
+			while (x < y) {
+				if (f >= 0) {
+					y--;
+					ddF_y += 2;
+					f += ddF_y;
+				}
+				x++;
+				ddF_x += 2;
+				f += ddF_x;
+
+				setPixel(x0 + x, y0 + y, color);
+				setPixel(x0 - x, y0 + y, color);
+
+				setPixel(x0 + x, y0 - y, color);
+				setPixel(x0 - x, y0 - y, color);
+
+				setPixel(x0 + y, y0 + x, color);
+				setPixel(x0 - y, y0 + x, color);
+
+				setPixel(x0 + y, y0 - x, color);
+				setPixel(x0 - y, y0 - x, color);
+			}
+		}
+	}
+
+	private void invertPixel(int x, int y, int color) {
+		if (x > 0 && y > 0 && x < w && y < h) {
+			// if(color == -1)
+			if ((pixels[x + y * w] & 0x80000000) == 0)
+				pixels[x + y * w] = ~(pixels[x + y * w]);
+			// else
+			// pixels[x+y*w] = color;
+		}
+	}
+
+	public void setPixel(int x, int y, int color) {
+		if (x > 0 && y > 0 && x < w && y < h) {
+			pixels[x + y * w] = color;
+		}
 	}
 
 	public void render(int xp, int yp, int tile, int colors, int bits) {

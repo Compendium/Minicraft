@@ -44,7 +44,7 @@ public class Player extends Mob {
 
 		inventory.add(new FurnitureItem(new Workbench()));
 		inventory.add(new PowerGloveItem());
-		inventory.add(new SaveStone());
+		//inventory.add(new SaveStone());
 	}
 
 	public void tick() {

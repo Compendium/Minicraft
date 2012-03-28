@@ -10,9 +10,6 @@ import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 
 public class Entity implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -595333308279425835L;
 	protected final Random random = new Random();
 	public int x, y;

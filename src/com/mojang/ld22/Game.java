@@ -16,6 +16,7 @@ import android.text.format.Time;
 import android.util.Log;
 import android.widget.Toast;
 import android.content.Intent;
+import android.graphics.Paint;
 
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
@@ -65,7 +66,7 @@ public class Game {
 	String status = "";
 	Time t = new Time();
 	int battery = 0;
-	
+
 	public int percentage = 0;
 
 	public static int getWidth() {
@@ -116,9 +117,8 @@ public class Game {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		if(settings == null)
-		{
+
+		if (settings == null) {
 			settings = new Settings();
 		}
 
@@ -148,7 +148,6 @@ public class Game {
 
 		currentLevel = 3;
 
-
 		levels[4] = new Level(128, 128, 1, null);
 		percentage += 18;
 		levels[3] = new Level(128, 128, 0, levels[4]);
@@ -168,7 +167,7 @@ public class Game {
 
 		level.add(player);
 		percentage += 1;
-		
+
 		for (int i = 0; i < 5; i++) {
 			levels[i].trySpawn(5000);
 			percentage += 1;
@@ -192,6 +191,7 @@ public class Game {
 	private double nsPerTick;
 	private int frames;
 	private long lastTimer1;
+	public boolean surfacedrawn = true;
 
 	public void startRun(Context activity) {
 		lastTime = System.nanoTime();
@@ -323,16 +323,30 @@ public class Game {
 		 * int cc = 0; for (int y = 0; y < screen.h; y++) { for (int x = 0; x < screen.w; x++) { cc = screen.pixels[x + y * screen.w]; if (cc < 255) pixels[x + y * WIDTH] = colors[cc]; } }
 		 */
 
-		// TODO add proper user interface
+		if (GameActivity.singleton.cursorPressed && GameActivity.singleton.cursorX != -1.f && GameActivity.singleton.cursorY != -1.f) {
+			float factx = GameActivity.singleton.cursorX / GameActivity.singleton.width * WIDTH;
+			float facty = GameActivity.singleton.cursorY / GameActivity.singleton.height * HEIGHT;
+			float size = 10.f * 1.8f;
+			// canvas.drawRect(factx - size/2, facty - size/2, factx + size/2, facty + size/2, p);
+			int x = (int) (factx);// - size/2);
+			int y = (int) (facty);// - size/2);
+			int cx = (int) (GameActivity.singleton.cursorCenterX / GameActivity.singleton.width * WIDTH);
+			int cy = (int) (GameActivity.singleton.cursorCenterY / GameActivity.singleton.height * HEIGHT);
+			int xs = (int) (size / 2);
+			int ys = (int) (size / 2);
+
+			screen.renderLine(cx, x, cy, y, -1);
+			screen.renderCircle(x, y, (int) size, -1);
+		}
 		canvas.drawBitmap(screen.pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT, false, null);
 	}
 
 	private void renderGui() {
 		// crosshair for center of controls
-		if(settings.controlshflipped)
-			screen.render(screen.w - ((screen.w / 5)), (screen.h / 2), 32-1, Color.get(-1, 222, 333, 444), 0);
-		else
-		screen.render(((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
+//		if (settings.controlshflipped)
+//			screen.render(screen.w - ((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
+//		else
+//			screen.render(((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
 
 		// black bar on bottom
 		for (int y = 0; y < 2; y++) {
@@ -460,7 +474,7 @@ public class Game {
 			player.stamina = player.maxStamina;
 			player.staminaRecharge = 0;
 			player.staminaRechargeDelay = 40;
-			
+
 			percentage += 5;
 
 			long starTime = System.nanoTime();
@@ -482,8 +496,8 @@ public class Game {
 		} else
 			throw new IOException("Cannot access file system");
 	}
-	
-	public void saveSettings () {
+
+	public void saveSettings() {
 		if (externalStorageWriteable) {
 			try {
 				File file = new File(ctxt.getExternalFilesDir(null), "settings.obj");
@@ -493,9 +507,7 @@ public class Game {
 				os.writeObject(settings);
 				os.flush();
 				os.close();
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				e.printStackTrace();
 				Log.e("ExternalStorage", "Error saving save-state");
 
@@ -508,12 +520,11 @@ public class Game {
 			}
 		}
 	}
-	
-	public void loadSettings () throws ClassNotFoundException, StreamCorruptedException, IOException {
-		if(externalStorageAvailable)
-		{
+
+	public void loadSettings() throws ClassNotFoundException, StreamCorruptedException, IOException {
+		if (externalStorageAvailable) {
 			File file = new File(ctxt.getExternalFilesDir(null), "settings.obj");
-			if(!file.exists())
+			if (!file.exists())
 				throw new IOException("Couldn't load settings");
 			Log.w("DEBUG", file.getPath());
 			FileInputStream fis = new FileInputStream(file);

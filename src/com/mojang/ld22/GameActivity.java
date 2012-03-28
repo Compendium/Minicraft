@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -23,6 +24,8 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 	public static GameActivity singleton;
 
+	public int width = 0, height = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		singleton = this;
@@ -36,13 +39,14 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		width = metrics.widthPixels;
+		height = metrics.heightPixels;
 		game = new Game(metrics.widthPixels, metrics.heightPixels);
 
 		gameView = (GameView) findViewById(R.id.gameView);
 		gameView.setOnTouchListener(this);
 
 		game.startRun(GameActivity.singleton);
-
 		gameThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -105,6 +109,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 		shouldRun = false;
 		game.stop();
 		considerSaving();
+		Log.w("DEBUG", "pause");
 	}
 
 	@Override
@@ -113,6 +118,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 		shouldRun = false;
 		game.stop();
 		considerSaving();
+		Log.w("DEBUG", "stop");
 	};
 
 	@Override
@@ -121,7 +127,8 @@ public class GameActivity extends Activity implements OnTouchListener {
 		shouldRun = false;
 		game.stop();
 		considerSaving();
-		
+
+		Log.w("DEBUG", "destroy");
 		this.finish();
 	};
 
@@ -135,15 +142,28 @@ public class GameActivity extends Activity implements OnTouchListener {
 	}
 
 	@Override
+	public void onBackPressed() {
+		if (game.menu instanceof TitleMenu) {
+			this.finish();
+		} else {
+			saved = false;
+			considerSaving();
+			game.setMenu(new TitleMenu());
+		}
+	}
+
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 	}
 
 	private static final int INVALID_POINTER_ID = -1;
-	float cursorX = -1;
-	float cursorY = -1;
+	public float cursorX = -1;
+	public float cursorY = -1;
+	public float cursorCenterX = -1;
+	public float cursorCenterY = -1;
 	int cursorId = -1;
-	boolean cursorPressed = false;
+	public boolean cursorPressed = false;
 
 	int attackId = -1;
 	int menuId = -1;
@@ -163,6 +183,8 @@ public class GameActivity extends Activity implements OnTouchListener {
 						cursorPressed = true;
 						cursorId = event.getPointerId(i); // action >>
 															// MotionEvent.ACTION_POINTER_ID_SHIFT;
+						cursorCenterX = (game.settings.controlshflipped ? gameView.getWidth() - gameView.getWidth() / 5 : gameView.getWidth() / 5);
+						cursorCenterY = gameView.getHeight() / 2;
 					}
 					if ((game.settings.controlshflipped ? event.getX(i) < gameView.getWidth() / 2 : event.getX(i) > gameView.getWidth() / 2)) {
 						if (event.getY(i) < gameView.getHeight() / 2) {
@@ -177,13 +199,15 @@ public class GameActivity extends Activity implements OnTouchListener {
 				if (match == false) {
 					cursorPressed = false;
 					cursorId = INVALID_POINTER_ID;
+					cursorX = cursorY = -1.f;
 				}
 			}
 
 			if (actionCode == MotionEvent.ACTION_UP || actionCode == MotionEvent.ACTION_POINTER_UP || actionCode == MotionEvent.ACTION_CANCEL) {
 				if (action >> MotionEvent.ACTION_POINTER_ID_SHIFT == cursorId) {
 					cursorPressed = false;
-					cursorId = -1;
+					cursorId = INVALID_POINTER_ID;
+					cursorX = cursorY = -1.f;
 
 					game.getInputHandler().keyEvent(InputHandler.UP, false);
 					game.getInputHandler().keyEvent(InputHandler.DOWN, false);
@@ -211,23 +235,30 @@ public class GameActivity extends Activity implements OnTouchListener {
 				if (range(202.5f, angle, 337.5f)) {
 					if (!game.getInputHandler().isDown(InputHandler.UP))
 						game.getInputHandler().keyEvent(InputHandler.UP, true);
-				} else if (range(157.5f, angle, 22.5)) {
+				} else {
+					game.getInputHandler().keyEvent(InputHandler.UP, false);
+				}
+
+				if (range(157.5f, angle, 22.5)) {
 					if (!game.getInputHandler().isDown(InputHandler.DOWN))
 						game.getInputHandler().keyEvent(InputHandler.DOWN, true);
 				} else {
-					game.getInputHandler().keyEvent(InputHandler.UP, false);
+
 					game.getInputHandler().keyEvent(InputHandler.DOWN, false);
 				}
 
 				if (range(112.5f, angle, 247.5f)) {
 					if (!game.getInputHandler().isDown(InputHandler.LEFT))
 						game.getInputHandler().keyEvent(InputHandler.LEFT, true);
-				} else if ((range(292.5f, angle, 360) || range(0, angle, 67.5f))) {
+				} else {
+					game.getInputHandler().keyEvent(InputHandler.LEFT, false);
+				}
+
+				if ((range(292.5f, angle, 360) || range(0, angle, 67.5f))) {
 					if (!game.getInputHandler().isDown(InputHandler.RIGHT))
 						game.getInputHandler().keyEvent(InputHandler.RIGHT, true);
 				} else {
 					game.getInputHandler().keyEvent(InputHandler.RIGHT, false);
-					game.getInputHandler().keyEvent(InputHandler.LEFT, false);
 				}
 
 			}
