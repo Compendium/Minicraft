@@ -46,14 +46,10 @@ public class Screen {
 	}
 
 	public void renderRect(int xp, int yp, int xs, int ys, int colors) {
-		// xp -= xOffset;
-		// yp -= yOffset;
-		int col = colors & 255;
 		for (int x = xp; x < xp + xs; x++) {
 			for (int y = yp; y < yp + ys; y++) {
 				if ((x < w && y < h))
-					pixels[x + y * w] = col;
-
+					setPixel(x, y, colors);
 			}
 		}
 	}
@@ -191,7 +187,25 @@ public class Screen {
 
 	public void setPixel(int x, int y, int color) {
 		if (x > 0 && y > 0 && x < w && y < h) {
-			pixels[x + y * w] = color;
+			//ARGB
+			//pixels[x + y * w] = color;
+			int alpha = ((color & 0xff000000) >> 24) & 0xff;
+			float a = (float)alpha / (float)0xff;
+			
+			int sr = ((pixels[x+y*w] & 0x00ff0000) >> 16) & 0xff;
+			int sg = ((pixels[x+y*w] & 0x0000ff00) >> 8) & 0xff;
+			int sb = ((pixels[x+y*w] & 0x000000ff) >> 0) & 0xff;
+			
+			int s2r = ((color & 0x00ff0000) >> 16) & 0xff;
+			int s2g = ((color & 0x0000ff00) >> 8) & 0xff;
+			int s2b = ((color & 0x000000ff) >> 0) & 0xff;
+			
+			int e = (((int)((float)sr * a)&0xff) << 16) | (((int)((float)sg * a)&0xff) << 8) | (((int)((float)sb * a)&0xff) << 0) | 0xff000000;
+			a = 1-a;
+			int d = (((int)((float)s2r * a)&0xff) << 16) | (((int)((float)s2g * a)&0xff) << 8) | (((int)((float)s2b * a)&0xff) << 0) | 0xff000000;
+			pixels[x+y*w] = (d+e) | 0xff000000;
+			
+			//pixels[x + y * w] = alpha * Source + (1-alpha) * Source2;
 		}
 	}
 

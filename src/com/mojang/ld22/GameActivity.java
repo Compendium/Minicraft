@@ -48,7 +48,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 		game.startRun(GameActivity.singleton);
 		gameThread = new Thread(new Runnable() {
-			@Override
 			public void run() {
 				while (shouldRun) {
 					game.iterate(GameView.gameCanvas);
@@ -81,7 +80,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 			gameView = (GameView) findViewById(R.id.gameView);
 			gameView.setOnTouchListener(this);
 			gameThread = new Thread(new Runnable() {
-				@Override
 				public void run() {
 					while (shouldRun) {
 						game.iterate(GameView.gameCanvas);
@@ -166,9 +164,10 @@ public class GameActivity extends Activity implements OnTouchListener {
 	public boolean cursorPressed = false;
 
 	int attackId = -1;
+	public boolean attackPressed = false;
 	int menuId = -1;
+	public boolean menuPressed = false;
 
-	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// dumpEvent(event);
 		int action = event.getAction();
@@ -190,9 +189,11 @@ public class GameActivity extends Activity implements OnTouchListener {
 						if (event.getY(i) < gameView.getHeight() / 2) {
 							game.getInputHandler().keyEvent(InputHandler.MENU, true);
 							menuId = event.getPointerId(i);
+							menuPressed = true;
 						} else if (event.getY(i) > gameView.getHeight() / 2) {
 							game.getInputHandler().keyEvent(InputHandler.ATTACK, true);
 							attackId = event.getPointerId(i);
+							attackPressed = true;
 						}
 					}
 				}
@@ -214,9 +215,13 @@ public class GameActivity extends Activity implements OnTouchListener {
 					game.getInputHandler().keyEvent(InputHandler.RIGHT, false);
 					game.getInputHandler().keyEvent(InputHandler.LEFT, false);
 				} else if (action >> MotionEvent.ACTION_POINTER_ID_SHIFT == attackId) {
+					attackId = INVALID_POINTER_ID;
 					game.getInputHandler().keyEvent(InputHandler.ATTACK, false);
+					attackPressed = false;
 				} else if (action >> MotionEvent.ACTION_POINTER_ID_SHIFT == menuId) {
+					menuId = INVALID_POINTER_ID;
 					game.getInputHandler().keyEvent(InputHandler.MENU, false);
+					menuPressed = false;
 				}
 			}
 

@@ -326,7 +326,7 @@ public class Game {
 		if (GameActivity.singleton.cursorPressed && GameActivity.singleton.cursorX != -1.f && GameActivity.singleton.cursorY != -1.f) {
 			float factx = GameActivity.singleton.cursorX / GameActivity.singleton.width * WIDTH;
 			float facty = GameActivity.singleton.cursorY / GameActivity.singleton.height * HEIGHT;
-			float size = 10.f * 1.8f;
+			float size = 10.f * 1.2f;
 			// canvas.drawRect(factx - size/2, facty - size/2, factx + size/2, facty + size/2, p);
 			int x = (int) (factx);// - size/2);
 			int y = (int) (facty);// - size/2);
@@ -335,8 +335,15 @@ public class Game {
 			int xs = (int) (size / 2);
 			int ys = (int) (size / 2);
 
-			screen.renderLine(cx, x, cy, y, -1);
-			screen.renderCircle(x, y, (int) size, -1);
+			screen.renderLine(cx, x, cy, y, 0xbb808080);
+			screen.renderCircle(x, y, (int) size, 0xbb808080);
+		}
+		if(GameActivity.singleton.attackPressed)
+		{
+			if(this.settings.controlshflipped)
+				screen.renderRect(0, screen.h / 2, screen.w / 2, screen.h / 2, 0xcf808080);
+			else
+				screen.renderRect(screen.w / 2, screen.h / 2, screen.w / 2, screen.h / 2, 0xcf808080);
 		}
 		canvas.drawBitmap(screen.pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT, false, null);
 	}

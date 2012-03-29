@@ -25,9 +25,16 @@ public class Sound {
 	transient private SparseIntArray soundpoolmap = new SparseIntArray();
 
 	private Sound(int ressourceID) {
+		try
+		{
 		id = ressourceID;
 		soundpoolmap.put(ressourceID, soundpool.load(GameActivity.singleton, ressourceID, 1));
 		play(0.0f);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public void play ()
@@ -36,6 +43,8 @@ public class Sound {
 	}
 
 	public void play(float volmod) {
+		try
+		{
 		AudioManager mgr = (AudioManager)GameActivity.singleton.getSystemService(Context.AUDIO_SERVICE);
 		float streamVolCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
 		float streamVolMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -43,5 +52,10 @@ public class Sound {
 		vol *= volmod;
 		
 		soundpool.play(soundpoolmap.get(id), vol, vol, 1, 0, 1.f);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
