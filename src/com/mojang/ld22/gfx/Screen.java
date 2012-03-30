@@ -33,7 +33,7 @@ public class Screen {
 					int r1 = ((rr + mid * 1) / 2) * 230 / 255 + 10;
 					int g1 = ((gg + mid * 1) / 2) * 230 / 255 + 10;
 					int b1 = ((bb + mid * 1) / 2) * 230 / 255 + 10;
-					colors[pp++] = r1 << 16 | g1 << 8 | b1;
+					colors[pp++] = 0xff000000 | r1 << 16 | g1 << 8 | b1;
 
 				}
 			}
@@ -42,7 +42,7 @@ public class Screen {
 
 	public void clear(int color) {
 		for (int i = 0; i < pixels.length; i++)
-			pixels[i] = color;
+			pixels[i] = color | 0xff000000;
 	}
 
 	public void renderRect(int xp, int yp, int xs, int ys, int colors) {
@@ -179,7 +179,7 @@ public class Screen {
 		if (x > 0 && y > 0 && x < w && y < h) {
 			// if(color == -1)
 			if ((pixels[x + y * w] & 0x80000000) == 0)
-				pixels[x + y * w] = ~(pixels[x + y * w]);
+				pixels[x + y * w] = ~(pixels[x + y * w]) | 0xff000000;
 			// else
 			// pixels[x+y*w] = color;
 		}
@@ -235,7 +235,7 @@ public class Screen {
 					xs = 7 - x;
 				col = (colors >> (sheet.pixels[xs + ys * sheet.width + toffs] * 8)) & 255;
 				if (col < 255)
-					pixels[(x + xp) + (y + yp) * w] = Screen.colors[col];
+					pixels[(x + xp) + (y + yp) * w] = Screen.colors[col] | 0xff000000;
 			}
 		}
 	}

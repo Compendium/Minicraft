@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Toast;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.Xfermode;
 
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
@@ -40,6 +41,11 @@ public class Game {
 	private static final int HEIGHT = 120;
 	private static int WIDTH = 160;
 	private static int SCALE;
+	
+	public static int realWidth = 1;
+	public static int realHeight = 1;
+	
+	public int[] pixels = new int[800*480];
 
 	private boolean running = false;
 	private Screen screen;
@@ -78,6 +84,9 @@ public class Game {
 	}
 
 	public Game(final int displayWidth, final int displayHeigth) {
+		realWidth = displayWidth;
+		realHeight = displayHeigth;
+		
 		this.ctxt = GameActivity.singleton;
 		final int scaleX = displayWidth / WIDTH;
 		final int scaleY = displayHeigth / HEIGHT;
@@ -315,6 +324,7 @@ public class Game {
 			renderGui();
 		}
 
+
 		if (menu != null) {
 			menu.render(screen);
 		}
@@ -335,17 +345,18 @@ public class Game {
 			int xs = (int) (size / 2);
 			int ys = (int) (size / 2);
 
-			screen.renderLine(cx, x, cy, y, 0xbb808080);
-			screen.renderCircle(x, y, (int) size, 0xbb808080);
+			screen.renderLine(cx, x, cy, y, 0x7f808080);
+			screen.renderCircle(x, y, (int) size, 0x7f808080);
 		}
 		if(GameActivity.singleton.attackPressed)
 		{
 			if(this.settings.controlshflipped)
-				screen.renderRect(0, screen.h / 2, screen.w / 2, screen.h / 2, 0xcf808080);
+				screen.renderRect(0, screen.h / 2, screen.w / 2, screen.h / 2, 0xe8808080);
 			else
-				screen.renderRect(screen.w / 2, screen.h / 2, screen.w / 2, screen.h / 2, 0xcf808080);
+				screen.renderRect(screen.w / 2, screen.h / 2, screen.w / 2, screen.h / 2, 0xe8808080);
 		}
-		canvas.drawBitmap(screen.pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT, false, null);
+	
+		canvas.drawBitmap(screen.pixels, 0, WIDTH, 0.f, 0.f, WIDTH, HEIGHT, true, null);
 	}
 
 	private void renderGui() {

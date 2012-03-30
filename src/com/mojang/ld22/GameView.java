@@ -9,7 +9,7 @@ import android.view.View;
  * @author chris
  */
 public class GameView extends View {
-	private static Bitmap gameBitmap;
+	public static Bitmap gameBitmap;
 	public static Canvas gameCanvas;
 
 	private boolean loaded = false;
@@ -57,12 +57,8 @@ public class GameView extends View {
 
 			if (!loaded)
 				initMeasure();
-//			while (GameActivity.singleton.game.surfacedrawn == false) {
-//			}
-//			;
+
 			canvas.drawBitmap(gameBitmap, source, dest, drawPaint);
-			// canvas.drawBitmap(gameBitmap, 0, 0, null);
-			// mCanvas.drawBitmap(mBitmap, 0,0,null);
 		}
 	}
 }

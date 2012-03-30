@@ -15,7 +15,7 @@ import android.view.Window;
 
 public class GameActivity extends Activity implements OnTouchListener {
 	public Game game = null;
-	private GameView gameView;
+	public GameView gameView;
 
 	private Thread gameThread;
 

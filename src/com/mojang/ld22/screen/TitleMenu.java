@@ -54,8 +54,10 @@ public class TitleMenu extends Menu {
 		if (input.attack.clicked || input.menu.clicked) {
 			selected += offset;
 			if (selected == 0) {
+				game.percentage = 0;
 				game.setMenu(new LoadingMenu(this, LoadingMenu.LOADGAME));
 			} else if (selected == 1) {
+				game.percentage = 0;
 				game.setMenu(new LoadingMenu(this, LoadingMenu.NEWGAME));
 			} else if (selected == 2) {
 				game.setMenu(new SettingsMenu(this));
