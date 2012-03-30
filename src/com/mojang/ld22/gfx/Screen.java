@@ -1,7 +1,5 @@
 package com.mojang.ld22.gfx;
 
-import android.util.Log;
-
 public class Screen {
 	public int xOffset;
 	public int yOffset;

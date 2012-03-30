@@ -10,7 +10,6 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.item.FurnitureItem;
 import com.mojang.ld22.item.Item;
 import com.mojang.ld22.item.PowerGloveItem;
-import com.mojang.ld22.item.SaveStone;
 import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
 import com.mojang.ld22.screen.InventoryMenu;

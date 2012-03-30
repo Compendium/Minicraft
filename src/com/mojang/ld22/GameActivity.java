@@ -1,7 +1,7 @@
 package com.mojang.ld22;
 
 import com.mojang.ld22.screen.TitleMenu;
-
+import com.mojang.ld22.sound.Music;
 import oz.wizards.minicraft.R;
 import android.app.Activity;
 import android.media.AudioManager;
@@ -32,11 +32,10 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 		setContentView(R.layout.main);
-
+		
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		width = metrics.widthPixels;
@@ -108,6 +107,11 @@ public class GameActivity extends Activity implements OnTouchListener {
 		game.stop();
 		considerSaving();
 		Log.w("DEBUG", "pause");
+		
+		Music.carnivorus_carnival.stop();
+		Music.dark_skies.stop();
+		Music.sadness_and_sorrow.stop();
+		Music.temple_in_the_storm.stop();
 	}
 
 	@Override
@@ -144,6 +148,9 @@ public class GameActivity extends Activity implements OnTouchListener {
 		if (game.menu instanceof TitleMenu) {
 			this.finish();
 		} else {
+			shouldRun = false;
+			game.stop();
+			
 			saved = false;
 			considerSaving();
 			game.setMenu(new TitleMenu());

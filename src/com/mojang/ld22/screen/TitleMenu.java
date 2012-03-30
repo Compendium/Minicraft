@@ -7,6 +7,8 @@ import com.mojang.ld22.InputHandler;
 import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
+import com.mojang.ld22.sound.Music;
+import com.mojang.ld22.sound.Sound;
 
 public class TitleMenu extends Menu {
 	private int selected = 0;
@@ -54,11 +56,17 @@ public class TitleMenu extends Menu {
 		if (input.attack.clicked || input.menu.clicked) {
 			selected += offset;
 			if (selected == 0) {
+				Sound.tick.play();
+				Music.sadness_and_sorrow.play();
 				game.percentage = 0;
 				game.setMenu(new LoadingMenu(this, LoadingMenu.LOADGAME));
 			} else if (selected == 1) {
+				Sound.tick.play();
+				Music.sadness_and_sorrow.play();
+
 				game.percentage = 0;
 				game.setMenu(new LoadingMenu(this, LoadingMenu.NEWGAME));
+
 			} else if (selected == 2) {
 				game.setMenu(new SettingsMenu(this));
 			} else if (selected == 3) {

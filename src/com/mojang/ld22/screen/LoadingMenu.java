@@ -3,12 +3,9 @@ package com.mojang.ld22.screen;
 import java.io.IOException;
 import java.io.StreamCorruptedException;
 
-import android.util.Log;
-
 import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
-import com.mojang.ld22.sound.Sound;
 
 public class LoadingMenu extends Menu {
 	private Menu parent;
@@ -28,7 +25,6 @@ public class LoadingMenu extends Menu {
 		if (once) {
 			once = false;
 			if (intent == 0) {
-				Sound.tick.play();
 				loadingThread = new Thread(new Runnable() {
 					public void run() {
 						game.resetGame();
@@ -38,7 +34,6 @@ public class LoadingMenu extends Menu {
 				// game.setMenu(null);
 				loadingThread.start();
 			} else if (intent == 1) {
-				Sound.tick.play();
 				loadingThread = new Thread(new Runnable() {
 					public void run() {
 						try {
@@ -73,27 +68,25 @@ public class LoadingMenu extends Menu {
 		screen.clear(0);
 		String msg1 = "Loading";
 		String msg2 = "Please be patient ";
-		
+
 		Font.draw(msg1, screen, screen.w / 2 - (msg1.length() * 8 / 2), screen.h / 2 - 4, Color.get(0, 111, 111, 111));
 		Font.draw(msg2, screen, screen.w / 2 - (msg2.length() * 8 / 2), screen.h / 2 - 4 + 8, Color.get(0, 111, 111, 111));
 		screen.render((screen.w / 2 - (msg2.length() * 8 / 2)) + (msg2.length() * 8), screen.h / 2 - 4 + 8, 0 + 12 * 32, Color.get(000, 200, 500, 533), 0);
-		
-		
+
 		float steps = (screen.w / 8) - 2;
 		float stepsize = steps / 100.f;
-		float maxstep = (float)game.percentage * stepsize;
-		
-		for(int i = 8; i < (screen.w - 8); i+=8)
-		{
+		float maxstep = (float) game.percentage * stepsize;
+
+		for (int i = 8; i < (screen.w - 8); i += 8) {
 			int c;
-			if((i/8)-1 < maxstep)
+			if ((i / 8) - 1 < maxstep)
 				c = Color.get(0, 999, 999, 999);
 			else
 				c = Color.get(0, 111, 111, 111);
-			
-			Font.draw("|", screen, i, screen.h/2 - 4 + 8*2, c);
+
+			Font.draw("|", screen, i, screen.h / 2 - 4 + 8 * 2, c);
 		}
 		String percentage = Integer.toString(game.percentage);
-		Font.draw(percentage, screen, screen.w / 2 - (percentage.length() * 8 / 2), screen.h / 2 - 4 + 8*2, Color.get(-1, 555, 555, 555));
+		Font.draw(percentage, screen, screen.w / 2 - (percentage.length() * 8 / 2), screen.h / 2 - 4 + 8 * 2, Color.get(-1, 555, 555, 555));
 	}
 }

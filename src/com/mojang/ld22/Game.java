@@ -16,9 +16,6 @@ import android.text.format.Time;
 import android.util.Log;
 import android.widget.Toast;
 import android.content.Intent;
-import android.graphics.Paint;
-import android.graphics.Xfermode;
-
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
 //import com.mojang.ld22.gfx.Font;
@@ -33,6 +30,8 @@ import com.mojang.ld22.screen.LevelTransitionMenu;
 import com.mojang.ld22.screen.Menu;
 import com.mojang.ld22.screen.TitleMenu;
 import com.mojang.ld22.screen.WonMenu;
+import com.mojang.ld22.sound.Music;
+import com.mojang.ld22.sound.Sound;
 
 public class Game {
 	public Context ctxt;
@@ -130,7 +129,6 @@ public class Game {
 		if (settings == null) {
 			settings = new Settings();
 		}
-
 	}
 
 	// private Paint blackPaint;
@@ -193,6 +191,21 @@ public class Game {
 
 		if (menu == null)
 			setMenu(new TitleMenu());
+		
+		
+		Music.carnivorus_carnival = new Music(R.raw.carnivorus_carnival_381218);
+		Music.dark_skies = new Music(R.raw.newgrounds_darksk_70107);
+		Music.sadness_and_sorrow = new Music(R.raw.sadness_and_sorrow_151445);
+		Music.temple_in_the_storm = new Music(R.raw.temple_in_the_storm_165200);
+		
+		Sound.tick = new Sound(R.raw.test);
+		Sound.bossdeath = new Sound(R.raw.bossdeath);
+		Sound.craft = new Sound(R.raw.craft);
+		Sound.hit = new Sound(R.raw.hit1);
+		Sound.monsterHurt = new Sound(R.raw.monsterhurt);
+		Sound.pickup = new Sound(R.raw.pickup);
+		Sound.playerDeath = new Sound(R.raw.death);
+		Sound.playerHurt = new Sound(R.raw.playerhurt);
 	}
 
 	private long lastTime;
@@ -342,8 +355,6 @@ public class Game {
 			int y = (int) (facty);// - size/2);
 			int cx = (int) (GameActivity.singleton.cursorCenterX / GameActivity.singleton.width * WIDTH);
 			int cy = (int) (GameActivity.singleton.cursorCenterY / GameActivity.singleton.height * HEIGHT);
-			int xs = (int) (size / 2);
-			int ys = (int) (size / 2);
 
 			screen.renderLine(cx, x, cy, y, 0x7f808080);
 			screen.renderCircle(x, y, (int) size, 0x7f808080);

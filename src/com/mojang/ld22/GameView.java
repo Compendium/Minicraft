@@ -43,9 +43,7 @@ public class GameView extends View {
 		source = new Rect(0, 0, Game.getWidth(), Game.getHeight());
 
 		float proportion = (float) Game.getWidth() / (float) Game.getHeight();
-
 		float newWidth = this.getHeight() * proportion;
-
 		offsetX = (int) (this.getWidth() - newWidth) / 2;
 
 		dest = new Rect(offsetX, 0, (int) newWidth + offsetX, this.getHeight());
