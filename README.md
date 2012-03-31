@@ -32,16 +32,25 @@ Based on the fork from Chris Lott, I managed to implement the following extras:
 ## Changes to the changes of the Android Port ;)
 ### by Alexander Wiens (DerZaubererVonOz, Twitter: [@BDSGHTJ](https://twitter.com/BDSGHTJ), [github.com/Compendium/](http://github.com/Compendium)
 
-* Fixed build-setup on eclipse
+* Fixed build-setup on eclipse (ant didn't work for me)
 * Replaced all that button monkey-business with a analog style pseudo joystick
-* Working on adding more sounds, since the original lacks a bit in this aspect
-* Added really fast saving and loading :D
+* Working on adding more sounds/music, since the original lacks a bit in this aspect
+* Added really fast saving and loading :D  (but need to test this on other devices, maybe it's just my phone?)
 
 ### TODO
-	* Multi-touch is more or less done, maybe add some more graphical feedback where the interface is and its status.
-	* Fix flaky controls
-	* Optimizations generally and for android.
-		-Huge memory wastes about 1mb per second collected by the GC?
+	* Fix the sometimes flaky controls
+	* Optimizations generally and for android. EDIT: more or less done I think.
 	* Make APK available somehow. (Is the market an option?, ask Notch and all co-authors / check licenses!)
-	* Edit in game texts ("arrow keys"?)???
-	* When should saving happen?
+	* Add a credits screen
+
+# Attribution
+##(in no specific order)
+* Alexander Wiens (DerZaubererVonOz, [@BDSGHTJ](https://twitter.com/BDSGHTJ), [github.com/Compendium](http://github.com/Compendium)
+* Chris Lott ([@ChrisLott](https://twitter.com/ChrisLott), [http://www.chrislott.net](http://www.chrislott.net))
+* George Schneeloch ([GMail](bostonbusmap@gmail.com))
+* Sven Reul ([@hefferniceday](https://twitter.com/hefferniceday))
+* Rich Jones ([http://www.gun.io](http://www.gun.io))
+
+* With special thanks to Markus 'Notch' Persson ([@notch](https://twitter.com/notch), [http://mojang.com](http://www.mojang.com)) for creating Minicraft
+
+##TODO add muic authors

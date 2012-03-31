@@ -107,11 +107,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 		game.stop();
 		considerSaving();
 		Log.w("DEBUG", "pause");
-		
-		Music.carnivorus_carnival.stop();
-		Music.dark_skies.stop();
-		Music.sadness_and_sorrow.stop();
-		Music.temple_in_the_storm.stop();
 	}
 
 	@Override

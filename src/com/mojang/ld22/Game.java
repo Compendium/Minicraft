@@ -192,12 +192,12 @@ public class Game {
 		if (menu == null)
 			setMenu(new TitleMenu());
 		
-		
-		Music.carnivorus_carnival = new Music(R.raw.carnivorus_carnival_381218);
-		Music.dark_skies = new Music(R.raw.newgrounds_darksk_70107);
-		Music.sadness_and_sorrow = new Music(R.raw.sadness_and_sorrow_151445);
-		Music.temple_in_the_storm = new Music(R.raw.temple_in_the_storm_165200);
-		
+//		
+//		Music.carnivorus_carnival = new Music(R.raw.carnivorus_carnival_381218);
+//		Music.dark_skies = new Music(R.raw.newgrounds_darksk_70107);
+//		Music.sadness_and_sorrow = new Music(R.raw.sadness_and_sorrow_151445);
+//		Music.temple_in_the_storm = new Music(R.raw.temple_in_the_storm_165200);
+//		
 		Sound.tick = new Sound(R.raw.test);
 		Sound.bossdeath = new Sound(R.raw.bossdeath);
 		Sound.craft = new Sound(R.raw.craft);

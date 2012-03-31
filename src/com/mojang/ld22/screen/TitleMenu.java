@@ -62,7 +62,7 @@ public class TitleMenu extends Menu {
 				game.setMenu(new LoadingMenu(this, LoadingMenu.LOADGAME));
 			} else if (selected == 1) {
 				Sound.tick.play();
-				Music.sadness_and_sorrow.play();
+				//Music.sadness_and_sorrow.play();
 
 				game.percentage = 0;
 				game.setMenu(new LoadingMenu(this, LoadingMenu.NEWGAME));
