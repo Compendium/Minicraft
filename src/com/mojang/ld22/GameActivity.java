@@ -147,13 +147,11 @@ public class GameActivity extends Activity implements OnTouchListener {
 	public void onBackPressed() {
 		if (game.menu instanceof TitleMenu) {
 			this.finish();
-		} else {
-			shouldRun = false;
-			game.stop();
-			
+		} else {	
+			game.setMenu(new TitleMenu());
 			saved = false;
 			considerSaving();
-			game.setMenu(new TitleMenu());
+			
 		}
 	}
 
