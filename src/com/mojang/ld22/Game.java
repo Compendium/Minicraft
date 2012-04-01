@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.util.Random;
+
 import oz.wizards.minicraft.R;
 
 import android.content.Context;
@@ -71,8 +73,11 @@ public class Game {
 	String status = "";
 	Time t = new Time();
 	int battery = 0;
+	
+	transient long musicTimer = 0;
+	transient Random rng = new Random();
 
-	public int percentage = 0;
+	transient public int percentage = 0;
 
 	public static int getWidth() {
 		return WIDTH;
@@ -191,8 +196,7 @@ public class Game {
 
 		if (menu == null)
 			setMenu(new TitleMenu());
-		
-//		
+//		Loading these shouldn't take really that long because the mediaplayer class streams them, but just to be sure load them in a separate thread in the loading screen
 //		Music.carnivorus_carnival = new Music(R.raw.carnivorus_carnival_381218);
 //		Music.dark_skies = new Music(R.raw.newgrounds_darksk_70107);
 //		Music.sadness_and_sorrow = new Music(R.raw.sadness_and_sorrow_151445);
@@ -206,6 +210,7 @@ public class Game {
 		Sound.pickup = new Sound(R.raw.pickup);
 		Sound.playerDeath = new Sound(R.raw.death);
 		Sound.playerHurt = new Sound(R.raw.playerhurt);
+
 	}
 
 	private long lastTime;
@@ -292,6 +297,32 @@ public class Game {
 			}
 			level.tick();
 			Tile.tickCount++;
+			
+			if(musicTimer < System.nanoTime())
+			{
+				musicTimer = System.nanoTime() + 1L*1000000000L;
+				if(rng.nextInt(100) % 10 == 0 && Music.musicPlaying == false)
+				{
+					if(currentLevel < 3)
+						Music.knock_knock.play();
+					else if (currentLevel == 4)
+						Music.dark_skies.play();
+					else
+					{
+						int r = rng.nextInt(4);
+						if(r == 0)
+							Music.carnivorus_carnival.play();
+						else if(r == 1)
+							Music.heartbeat.play();
+						else if(r == 2)
+							Music.sad_song.play();
+						else if(r == 3)
+							Music.temple_in_the_storm.play();
+						else if(r == 4)
+							Music.vibe_timid_girl.play();
+					}
+				}
+			}
 		}
 	}
 
@@ -302,7 +333,11 @@ public class Game {
 		player.x = (player.x >> 4) * 16 + 8;
 		player.y = (player.y >> 4) * 16 + 8;
 		level.add(player);
-
+		if(currentLevel < 3)
+		{
+			Music.currentlyPlaying.stop();
+			Music.knock_knock.play();
+		}
 	}
 
 	public void render(android.graphics.Canvas canvas) {

@@ -251,7 +251,7 @@ public class Screen {
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
 				if (oPixels[i] / 10 <= dither[((x + xa) & 3) + ((y + ya) & 3) * 4])
-					pixels[i] = 0;
+					pixels[i] = 0xff000000;
 				i++;
 			}
 

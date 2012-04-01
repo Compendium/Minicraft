@@ -1,7 +1,6 @@
 package com.mojang.ld22;
 
 import com.mojang.ld22.screen.TitleMenu;
-import com.mojang.ld22.sound.Music;
 import oz.wizards.minicraft.R;
 import android.app.Activity;
 import android.media.AudioManager;

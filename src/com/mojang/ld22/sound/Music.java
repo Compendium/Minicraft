@@ -5,22 +5,44 @@ import com.mojang.ld22.GameActivity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 
 public class Music {
-	public static Music sadness_and_sorrow 		;//= new Music(R.raw.sadness_and_sorrow_151445);
-	public static Music temple_in_the_storm	 	;//= new Music(R.raw.temple_in_the_storm_165200);
-	public static Music dark_skies 				;//= new Music(R.raw.newgrounds_darksk_70107);
-	public static Music carnivorus_carnival 	;//= new Music(R.raw.carnivorus_carnival_381218);
+	/**
+	 * Ambient overworld music
+	 */
+	transient public static Music temple_in_the_storm	 	;//= new Music(R.raw.temple_in_the_storm_165200);
+	transient public static Music carnivorus_carnival 	;//= new Music(R.raw.carnivorus_carnival_381218);
+	transient public static Music heartbeat				;
+	transient public static Music sad_song 				;
+	transient public static Music vibe_timid_girl			;
+	
+	/**
+	 * Epic, bossbattle theme
+	 */
+	transient public static Music dark_skies 				;//= new Music(R.raw.newgrounds_darksk_70107);
+	/**
+	 * Fearsome theme
+	 */
+	transient public static Music knock_knock				;
+	
+	transient public static boolean musicPlaying = false;
+	transient public static Music currentlyPlaying = null;
 
 	MediaPlayer mMediaPlayer;
 
 	public Music(int resourceId) {
 		mMediaPlayer = MediaPlayer.create(GameActivity.singleton, resourceId);
+		mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				musicPlaying = false;
+			}
+		});
 	}
 
 	public void play() {
-		if (mMediaPlayer.isPlaying() == false)
-			mMediaPlayer.start();
+		play(1.f, false);
 	}
 
 	public void play(float volmod) {
@@ -36,9 +58,17 @@ public class Music {
 		mMediaPlayer.setVolume(vol, vol);
 		mMediaPlayer.setLooping(looping);
 		mMediaPlayer.start();
+		
+		currentlyPlaying = this;
+		musicPlaying = true;
 	}
 
 	public void stop() {
 		mMediaPlayer.stop();
+		currentlyPlaying = null;
+	}
+
+	public boolean isPlaying() {
+		return mMediaPlayer.isPlaying();
 	}
 }

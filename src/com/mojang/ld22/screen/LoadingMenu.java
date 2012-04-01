@@ -3,9 +3,12 @@ package com.mojang.ld22.screen;
 import java.io.IOException;
 import java.io.StreamCorruptedException;
 
+import oz.wizards.minicraft.R;
+
 import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
+import com.mojang.ld22.sound.Music;
 
 public class LoadingMenu extends Menu {
 	private Menu parent;
@@ -15,6 +18,7 @@ public class LoadingMenu extends Menu {
 	private int intent = 0;
 	public boolean success = false;
 	private Thread loadingThread;
+	private Thread musicLoadingThread;
 
 	public LoadingMenu(Menu parent, int i) {
 		this.parent = parent;
@@ -53,6 +57,23 @@ public class LoadingMenu extends Menu {
 					}
 				});
 				loadingThread.start();
+			}
+
+			if (musicLoadingThread == null) {
+				musicLoadingThread = new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						Music.carnivorus_carnival = new Music(R.raw.music_carnivorus_carnival_381218);
+						Music.heartbeat = new Music(R.raw.music_heartbeat_201982);
+						Music.knock_knock = new Music(R.raw.music_knock__knock_399895);
+						Music.dark_skies = new Music(R.raw.music_newgrounds_darksk_70107);
+						Music.sad_song = new Music(R.raw.music_sad_song_374621);
+						Music.temple_in_the_storm = new Music(R.raw.music_temple_in_the_storm165200);
+						Music.vibe_timid_girl = new Music(R.raw.music_vibe_timid_girl_217741);
+					}
+				});
+				musicLoadingThread.start();
 			}
 		}
 
