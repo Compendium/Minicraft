@@ -1,5 +1,7 @@
 package com.mojang.ld22.sound;
 
+import oz.wizards.minicraft.R;
+
 import com.mojang.ld22.GameActivity;
 
 import android.content.Context;
@@ -7,36 +9,25 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 
-public class Music {
-	/**
-	 * Ambient overworld music
-	 */
-	transient public static Music temple_in_the_storm	 	;//= new Music(R.raw.temple_in_the_storm_165200);
-	transient public static Music carnivorus_carnival 	;//= new Music(R.raw.carnivorus_carnival_381218);
-	transient public static Music heartbeat				;
-	transient public static Music sad_song 				;
-	transient public static Music vibe_timid_girl			;
-	
-	/**
-	 * Epic, bossbattle theme
-	 */
-	transient public static Music dark_skies 				;//= new Music(R.raw.newgrounds_darksk_70107);
-	/**
-	 * Fearsome theme
-	 */
-	transient public static Music knock_knock				;
-	
-	transient public static boolean musicPlaying = false;
-	transient public static Music currentlyPlaying = null;
+public class Ambient {
+	transient public static Ambient forest1; // = new Ambient(R.raw.ambient_dobroide__20060824_forest03_22384);
+	transient public static Ambient forest2; // = new Ambient(R.raw.ambient_reinsamba__morning_in_the_forest_2007_0415_33827);
+
+	transient public static Ambient cave1; // = new Ambient(R.raw.ambient_erh__the_cave_ahr_o2_b2_109_4096);
+	transient public static Ambient cave2; // = new Ambient(R.raw.ambient_plagasul__rarexport_05_4096);
+	transient public static Ambient cave3; // = new Ambient(R.raw.ambient_roscoetoon__water_drip_echo2_27151);
+
+	transient public static boolean isPlaying = false;
+	transient public static Ambient currentlyPlaying = null;
 
 	MediaPlayer mMediaPlayer;
 
-	public Music(int resourceId) {
+	public Ambient(int resourceId) {
 		mMediaPlayer = MediaPlayer.create(GameActivity.singleton, resourceId);
 		mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-				musicPlaying = false;
+				isPlaying = false;
 			}
 		});
 	}
@@ -58,15 +49,15 @@ public class Music {
 		mMediaPlayer.setVolume(vol, vol);
 		mMediaPlayer.setLooping(looping);
 		mMediaPlayer.start();
-		
+
 		currentlyPlaying = this;
-		musicPlaying = true;
+		isPlaying = true;
 	}
 
 	public void stop() {
 		mMediaPlayer.stop();
 		currentlyPlaying = null;
-		musicPlaying = false;
+		isPlaying = false;
 	}
 
 	public boolean isPlaying() {

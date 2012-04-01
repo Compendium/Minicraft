@@ -8,6 +8,7 @@ import oz.wizards.minicraft.R;
 import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
+import com.mojang.ld22.sound.Ambient;
 import com.mojang.ld22.sound.Music;
 
 public class LoadingMenu extends Menu {
@@ -71,6 +72,13 @@ public class LoadingMenu extends Menu {
 						Music.sad_song = new Music(R.raw.music_sad_song_374621);
 						Music.temple_in_the_storm = new Music(R.raw.music_temple_in_the_storm165200);
 						Music.vibe_timid_girl = new Music(R.raw.music_vibe_timid_girl_217741);
+
+						Ambient.forest1 = new Ambient(R.raw.ambient_dobroide__20060824_forest03_22384);
+						Ambient.forest2 = new Ambient(R.raw.ambient_reinsamba__morning_in_the_forest_2007_0415_33827);
+
+						Ambient.cave1 = new Ambient(R.raw.ambient_erh__the_cave_ahr_o2_b2_109_4096);
+						Ambient.cave2 = new Ambient(R.raw.ambient_plagasul__rarexport_05_4096);
+						Ambient.cave3 = new Ambient(R.raw.ambient_roscoetoon__water_drip_echo2_27151);
 					}
 				});
 				musicLoadingThread.start();

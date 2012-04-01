@@ -32,6 +32,7 @@ import com.mojang.ld22.screen.LevelTransitionMenu;
 import com.mojang.ld22.screen.Menu;
 import com.mojang.ld22.screen.TitleMenu;
 import com.mojang.ld22.screen.WonMenu;
+import com.mojang.ld22.sound.Ambient;
 import com.mojang.ld22.sound.Music;
 import com.mojang.ld22.sound.Sound;
 
@@ -42,11 +43,11 @@ public class Game {
 	private static final int HEIGHT = 120;
 	private static int WIDTH = 160;
 	private static int SCALE;
-	
+
 	public static int realWidth = 1;
 	public static int realHeight = 1;
-	
-	public int[] pixels = new int[800*480];
+
+	public int[] pixels = new int[800 * 480];
 
 	private boolean running = false;
 	private Screen screen;
@@ -73,7 +74,7 @@ public class Game {
 	String status = "";
 	Time t = new Time();
 	int battery = 0;
-	
+
 	transient long musicTimer = 0;
 	transient Random rng = new Random();
 
@@ -90,7 +91,7 @@ public class Game {
 	public Game(final int displayWidth, final int displayHeigth) {
 		realWidth = displayWidth;
 		realHeight = displayHeigth;
-		
+
 		this.ctxt = GameActivity.singleton;
 		final int scaleX = displayWidth / WIDTH;
 		final int scaleY = displayHeigth / HEIGHT;
@@ -196,12 +197,12 @@ public class Game {
 
 		if (menu == null)
 			setMenu(new TitleMenu());
-//		Loading these shouldn't take really that long because the mediaplayer class streams them, but just to be sure load them in a separate thread in the loading screen
-//		Music.carnivorus_carnival = new Music(R.raw.carnivorus_carnival_381218);
-//		Music.dark_skies = new Music(R.raw.newgrounds_darksk_70107);
-//		Music.sadness_and_sorrow = new Music(R.raw.sadness_and_sorrow_151445);
-//		Music.temple_in_the_storm = new Music(R.raw.temple_in_the_storm_165200);
-//		
+		// Loading these shouldn't take really that long because the mediaplayer class streams them, but just to be sure load them in a separate thread in the loading screen
+		// Music.carnivorus_carnival = new Music(R.raw.carnivorus_carnival_381218);
+		// Music.dark_skies = new Music(R.raw.newgrounds_darksk_70107);
+		// Music.sadness_and_sorrow = new Music(R.raw.sadness_and_sorrow_151445);
+		// Music.temple_in_the_storm = new Music(R.raw.temple_in_the_storm_165200);
+		//
 		Sound.tick = new Sound(R.raw.test);
 		Sound.bossdeath = new Sound(R.raw.bossdeath);
 		Sound.craft = new Sound(R.raw.craft);
@@ -297,29 +298,48 @@ public class Game {
 			}
 			level.tick();
 			Tile.tickCount++;
-			
-			if(musicTimer < System.nanoTime())
-			{
-				musicTimer = System.nanoTime() + 1L*1000000000L;
-				if(rng.nextInt(100) % 10 == 0 && Music.musicPlaying == false)
-				{
-					if(currentLevel < 3)
-						Music.knock_knock.play();
-					else if (currentLevel == 4)
-						Music.dark_skies.play();
-					else
-					{
-						int r = rng.nextInt(4);
-						if(r == 0)
-							Music.carnivorus_carnival.play();
-						else if(r == 1)
-							Music.heartbeat.play();
-						else if(r == 2)
-							Music.sad_song.play();
-						else if(r == 3)
-							Music.temple_in_the_storm.play();
-						else if(r == 4)
-							Music.vibe_timid_girl.play();
+
+			if (musicTimer < System.nanoTime()) {
+				musicTimer = System.nanoTime() + 1L * 1000000000L;
+				if (Ambient.isPlaying == false && Music.musicPlaying == false) {
+					if (rng.nextInt(50) < 3) { //play music
+						if(currentLevel == 4) //sky level, play boss battle theme
+							Music.dark_skies.play();
+						else
+						{
+							int r = rng.nextInt(5);
+							if(r == 0 && currentLevel < 3)
+								Music.knock_knock.play();
+							else if(r == 1)
+								Music.carnivorus_carnival.play();
+							else if(r == 2)
+								Music.heartbeat.play();
+							else if(r == 3)
+								Music.sad_song.play();
+							else if(r == 4)
+								Music.temple_in_the_storm.play();
+							else if(r == 5)
+								Music.vibe_timid_girl.play();
+						}
+					} else { // play ambient
+						if(currentLevel < 3)
+						{
+							int r = rng.nextInt(2);
+							if(r == 0)
+								Ambient.cave1.play();
+							else if(r == 1)
+								Ambient.cave2.play();
+							else if (r == 2)
+								Ambient.cave3.play();
+						}
+						else if(currentLevel == 3)
+						{
+							int r = rng.nextInt(1);
+							if(r == 0)
+								Ambient.forest1.play();
+							else if (r == 1)
+								Ambient.forest2.play();
+						}
 					}
 				}
 			}
@@ -333,10 +353,11 @@ public class Game {
 		player.x = (player.x >> 4) * 16 + 8;
 		player.y = (player.y >> 4) * 16 + 8;
 		level.add(player);
-		if(currentLevel < 3)
-		{
+
+		if (Music.musicPlaying) {
 			Music.currentlyPlaying.stop();
-			Music.knock_knock.play();
+		} else if (Ambient.isPlaying) {
+			Ambient.currentlyPlaying.stop();
 		}
 	}
 
@@ -372,7 +393,6 @@ public class Game {
 			renderGui();
 		}
 
-
 		if (menu != null) {
 			menu.render(screen);
 		}
@@ -394,23 +414,22 @@ public class Game {
 			screen.renderLine(cx, x, cy, y, 0x7f808080);
 			screen.renderCircle(x, y, (int) size, 0x7f808080);
 		}
-		if(GameActivity.singleton.attackPressed)
-		{
-			if(this.settings.controlshflipped)
+		if (GameActivity.singleton.attackPressed) {
+			if (this.settings.controlshflipped)
 				screen.renderRect(0, screen.h / 2, screen.w / 2, screen.h / 2, 0xe8808080);
 			else
 				screen.renderRect(screen.w / 2, screen.h / 2, screen.w / 2, screen.h / 2, 0xe8808080);
 		}
-	
+
 		canvas.drawBitmap(screen.pixels, 0, WIDTH, 0.f, 0.f, WIDTH, HEIGHT, true, null);
 	}
 
 	private void renderGui() {
 		// crosshair for center of controls
-//		if (settings.controlshflipped)
-//			screen.render(screen.w - ((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
-//		else
-//			screen.render(((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
+		// if (settings.controlshflipped)
+		// screen.render(screen.w - ((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
+		// else
+		// screen.render(((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
 
 		// black bar on bottom
 		for (int y = 0; y < 2; y++) {
