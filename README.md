@@ -1,4 +1,9 @@
 # Minicraft #
+This is the Android version of "Minicraft", you can get a pre-compiled binary/apk here TODO
+
+My changes are CC-BY-SA
+
+## Changelist in a somewhat chronological order (the descriptions are taken over verbatim)
 ### By Notch (http://notch.tumblr.com/)
 
 For the Ludum Dare 22 competition!
@@ -40,11 +45,11 @@ Based on the fork from Chris Lott, I managed to implement the following extras:
 
 ### TODO
 	* Fix the sometimes flaky controls
-	* Make APK available somehow. (Is the market an option?, ask Notch and all co-authors / check licenses!)
+	* Get the app to the market sometime soon
 	* Add a credits screen, with attribution.
 
 # Attribution
-##(in no specific order)
+## (in no specific order)
 * Alexander Wiens (DerZaubererVonOz, [@BDSGHTJ](https://twitter.com/BDSGHTJ), [github.com/Compendium](http://github.com/Compendium))
 * Chris Lott ([@ChrisLott](https://twitter.com/ChrisLott), [http://www.chrislott.net](http://www.chrislott.net))
 * George Schneeloch ([GMail](mailto:bostonbusmap@gmail.com))

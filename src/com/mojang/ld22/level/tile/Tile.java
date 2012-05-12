@@ -42,12 +42,12 @@ public class Tile implements Serializable {
 	transient public final static Tile gemOre = new OreTile(21, new Resource("gem", 13 + 4 * 32, Color.get(-1, 101, 404, 545)));
 	transient public final static Tile cloudCactus = new CloudCactusTile(22);
 
-	public final byte id;
+	transient public final byte id;
 
-	public boolean connectsToGrass = false;
-	public boolean connectsToSand = false;
-	public boolean connectsToLava = false;
-	public boolean connectsToWater = false;
+	transient public boolean connectsToGrass = false;
+	transient public boolean connectsToSand = false;
+	transient public boolean connectsToLava = false;
+	transient public boolean connectsToWater = false;
 
 	public Tile(int id) {
 		this.id = (byte) id;
