@@ -12,19 +12,12 @@ public class Music {
 	 * Ambient overworld music
 	 */
 	transient public static Music temple_in_the_storm	 	;//= new Music(R.raw.temple_in_the_storm_165200);
-	transient public static Music carnivorus_carnival 	;//= new Music(R.raw.carnivorus_carnival_381218);
-	transient public static Music heartbeat				;
-	transient public static Music sad_song 				;
 	transient public static Music vibe_timid_girl			;
 	
 	/**
 	 * Epic, bossbattle theme
 	 */
 	transient public static Music dark_skies 				;//= new Music(R.raw.newgrounds_darksk_70107);
-	/**
-	 * Fearsome theme
-	 */
-	transient public static Music knock_knock				;
 	
 	transient public static boolean musicPlaying = false;
 	transient public static Music currentlyPlaying = null;

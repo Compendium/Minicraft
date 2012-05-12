@@ -64,11 +64,7 @@ public class LoadingMenu extends Menu {
 
 					@Override
 					public void run() {
-						Music.carnivorus_carnival = new Music(R.raw.music_carnivorus_carnival_381218);
-						Music.heartbeat = new Music(R.raw.music_heartbeat_201982);
-						Music.knock_knock = new Music(R.raw.music_knock__knock_399895);
 						Music.dark_skies = new Music(R.raw.music_newgrounds_darksk_70107);
-						Music.sad_song = new Music(R.raw.music_sad_song_374621);
 						Music.temple_in_the_storm = new Music(R.raw.music_temple_in_the_storm165200);
 						Music.vibe_timid_girl = new Music(R.raw.music_vibe_timid_girl_217741);
 					}

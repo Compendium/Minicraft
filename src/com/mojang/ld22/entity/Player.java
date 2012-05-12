@@ -176,8 +176,7 @@ public class Player extends Mob {
 		attackDir = dir;
 		attackItem = activeItem;
 		boolean done = false;
-		boolean hit = false;
-
+		
 		if (activeItem != null) {
 			attackTime = 10;
 			int yo = -2;

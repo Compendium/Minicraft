@@ -196,12 +196,7 @@ public class Game {
 
 		if (menu == null)
 			setMenu(new TitleMenu());
-//		Loading these shouldn't take really that long because the mediaplayer class streams them, but just to be sure load them in a separate thread in the loading screen
-//		Music.carnivorus_carnival = new Music(R.raw.carnivorus_carnival_381218);
-//		Music.dark_skies = new Music(R.raw.newgrounds_darksk_70107);
-//		Music.sadness_and_sorrow = new Music(R.raw.sadness_and_sorrow_151445);
-//		Music.temple_in_the_storm = new Music(R.raw.temple_in_the_storm_165200);
-//		
+		
 		Sound.tick = new Sound(R.raw.test);
 		Sound.bossdeath = new Sound(R.raw.bossdeath);
 		Sound.craft = new Sound(R.raw.craft);
@@ -303,24 +298,6 @@ public class Game {
 				musicTimer = System.nanoTime() + 1L*1000000000L;
 				if(rng.nextInt(100) % 10 == 0 && Music.musicPlaying == false)
 				{
-					if(currentLevel < 3)
-						Music.knock_knock.play();
-					else if (currentLevel == 4)
-						Music.dark_skies.play();
-					else
-					{
-						int r = rng.nextInt(4);
-						if(r == 0)
-							Music.carnivorus_carnival.play();
-						else if(r == 1)
-							Music.heartbeat.play();
-						else if(r == 2)
-							Music.sad_song.play();
-						else if(r == 3)
-							Music.temple_in_the_storm.play();
-						else if(r == 4)
-							Music.vibe_timid_girl.play();
-					}
 				}
 			}
 		}
@@ -336,7 +313,6 @@ public class Game {
 		if(currentLevel < 3)
 		{
 			Music.currentlyPlaying.stop();
-			Music.knock_knock.play();
 		}
 	}
 
