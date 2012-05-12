@@ -9,7 +9,8 @@ import com.mojang.ld22.gfx.Screen;
 public class SettingsMenu extends Menu {
 	private Menu parent;
 	private int selected = 0;
-	private static String[] options = new String[] { "Controls", "Back" };
+	private static String[] options = new String[] { "Controls", "Music",
+			"Back" };
 
 	public SettingsMenu(Menu parent) {
 		this.parent = parent;
@@ -35,13 +36,14 @@ public class SettingsMenu extends Menu {
 		if (input.menu.clicked) {
 			game.setMenu(parent);
 		}
-		
-		if(input.attack.clicked){
-			if(selected == options.length-1)
+
+		if (input.attack.clicked) {
+			if (selected == options.length - 1)
 				game.setMenu(parent);
-			else if (selected == 0)
-			{
+			else if (selected == 0) {
 				game.settings.controlshflipped = !game.settings.controlshflipped;
+			} else if (selected == 1) {
+				game.settings.musicEnabled = !game.settings.musicEnabled;
 			}
 		}
 	}
@@ -53,7 +55,13 @@ public class SettingsMenu extends Menu {
 			String msg;
 			{
 				if (i == 0) {
-					msg = options[i] + " : " + (game.settings.controlshflipped ? "flipped" : "normal");
+					msg = options[i]
+							+ " : "
+							+ (game.settings.controlshflipped ? "flipped"
+									: "normal");
+				} else if (i == 1) {
+					msg = options[i] + " : "
+							+ (game.settings.musicEnabled ? "on" : "off");
 				} else {
 					msg = options[i];
 				}
@@ -63,9 +71,11 @@ public class SettingsMenu extends Menu {
 				msg = "> " + msg + " <";
 				col = Color.get(0, 555, 555, 555);
 			}
-			Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (8 + i) * 8, col);
+			Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2,
+					(8 + i) * 8, col);
 		}
-		Font.draw("(Use the touchscreen!)", screen, 0, screen.h - 8, Color.get(0, 111, 111, 111));
+		Font.draw("(Use the touchscreen!)", screen, 0, screen.h - 8,
+				Color.get(0, 111, 111, 111));
 	}
 
 }

@@ -36,21 +36,24 @@ Based on the fork from Chris Lott, I managed to implement the following extras:
 * Replaced all that button monkey-business with a analog style pseudo joystick
 * Working on adding more sounds/music, since the original lacks a bit in this aspect
 * Added really fast saving and loading :D  (but need to test this on other devices, maybe it's just my phone?)
+* Re-enabled frame-limiter, to conserve battery live on mobile devices.
 
 ### TODO
 	* Fix the sometimes flaky controls
-	* Optimizations generally and for android. EDIT: more or less done I think.
 	* Make APK available somehow. (Is the market an option?, ask Notch and all co-authors / check licenses!)
-	* Add a credits screen
+	* Add a credits screen, with attribution.
 
 # Attribution
 ##(in no specific order)
-* Alexander Wiens (DerZaubererVonOz, [@BDSGHTJ](https://twitter.com/BDSGHTJ), [github.com/Compendium](http://github.com/Compendium)
+* Alexander Wiens (DerZaubererVonOz, [@BDSGHTJ](https://twitter.com/BDSGHTJ), [github.com/Compendium](http://github.com/Compendium))
 * Chris Lott ([@ChrisLott](https://twitter.com/ChrisLott), [http://www.chrislott.net](http://www.chrislott.net))
-* George Schneeloch ([GMail](bostonbusmap@gmail.com))
+* George Schneeloch ([GMail](mailto:bostonbusmap@gmail.com))
 * Sven Reul ([@hefferniceday](https://twitter.com/hefferniceday))
 * Rich Jones ([http://www.gun.io](http://www.gun.io))
 
 * With special thanks to Markus 'Notch' Persson ([@notch](https://twitter.com/notch), [http://mojang.com](http://www.mojang.com)) for creating Minicraft
 
-##TODO add muic authors
+## Music
+* [Dark Skies, by MaestroRage](http://www.newgrounds.com/audio/view.php?id=1714459&sub=70107)
+* [Temple In the Storm, by BlazingDragon](http://www.newgrounds.com/audio/listen/165200)
+* [timid girl, by vibe-newgrounds](http://www.newgrounds.com/audio/listen/217741)

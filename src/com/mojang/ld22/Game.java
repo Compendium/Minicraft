@@ -150,6 +150,8 @@ public class Game {
 
 	public void stop() {
 		running = false;
+		if(Music.currentlyPlaying != null) 
+			Music.currentlyPlaying.fadeOut(0.06f);
 	}
 
 	public void resetGame() {
@@ -218,7 +220,7 @@ public class Game {
 	public void startRun(Context activity) {
 		lastTime = System.nanoTime();
 		unprocessed = 0;
-		nsPerTick = 1000000000.0 / 60;
+		nsPerTick = 1000000000.0 / 60.0;
 		frames = 0;
 		lastTimer1 = System.currentTimeMillis();
 
@@ -231,18 +233,18 @@ public class Game {
 			long now = System.nanoTime();
 			unprocessed += (now - lastTime) / nsPerTick;
 			lastTime = now;
-			boolean shouldRender = true;
+			boolean shouldRender = false;
 			while (unprocessed >= 1) {
 				tick();
 				unprocessed -= 1;
 				shouldRender = true;
 			}
 
-			try {
-				Thread.sleep(2);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			//try {
+				//Thread.sleep(2);
+			//} catch (InterruptedException e) {
+				//e.printStackTrace();
+			//}
 
 			if (shouldRender) {
 				frames++;
@@ -296,8 +298,13 @@ public class Game {
 			if(musicTimer < System.nanoTime())
 			{
 				musicTimer = System.nanoTime() + 1L*1000000000L;
-				if(rng.nextInt(100) % 10 == 0 && Music.musicPlaying == false)
+				if(rng.nextInt(25) == 12 && Music.musicPlaying == false)
 				{
+					if(rng.nextBoolean() == true) {
+						Music.vibe_timid_girl.play(.1f);
+					} else {
+						Music.temple_in_the_storm.play(.2f);
+					}
 				}
 			}
 		}
@@ -310,9 +317,11 @@ public class Game {
 		player.x = (player.x >> 4) * 16 + 8;
 		player.y = (player.y >> 4) * 16 + 8;
 		level.add(player);
-		if(currentLevel < 3)
+		if(currentLevel < 3) //change into boss-level?
 		{
-			Music.currentlyPlaying.stop();
+			if(Music.currentlyPlaying != null) 
+				Music.currentlyPlaying.stop();
+			Music.dark_skies.play();
 		}
 	}
 
@@ -353,10 +362,6 @@ public class Game {
 			menu.render(screen);
 		}
 
-		/*
-		 * int cc = 0; for (int y = 0; y < screen.h; y++) { for (int x = 0; x < screen.w; x++) { cc = screen.pixels[x + y * screen.w]; if (cc < 255) pixels[x + y * WIDTH] = colors[cc]; } }
-		 */
-
 		if (GameActivity.singleton.cursorPressed && GameActivity.singleton.cursorX != -1.f && GameActivity.singleton.cursorY != -1.f) {
 			float factx = GameActivity.singleton.cursorX / GameActivity.singleton.width * WIDTH;
 			float facty = GameActivity.singleton.cursorY / GameActivity.singleton.height * HEIGHT;
@@ -382,12 +387,6 @@ public class Game {
 	}
 
 	private void renderGui() {
-		// crosshair for center of controls
-//		if (settings.controlshflipped)
-//			screen.render(screen.w - ((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
-//		else
-//			screen.render(((screen.w / 5)), (screen.h / 2), 32 - 1, Color.get(-1, 222, 333, 444), 0);
-
 		// black bar on bottom
 		for (int y = 0; y < 2; y++) {
 			for (int x = 0; x < (screen.w / 8); x++) {
@@ -561,7 +560,8 @@ public class Game {
 		}
 	}
 
-	public void loadSettings() throws ClassNotFoundException, StreamCorruptedException, IOException {
+	public void loadSettings() throws ClassNotFoundException,
+			StreamCorruptedException, IOException {
 		if (externalStorageAvailable) {
 			File file = new File(ctxt.getExternalFilesDir(null), "settings.obj");
 			if (!file.exists())

@@ -48,7 +48,7 @@ public class Sound {
 			float streamVolCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
 			float streamVolMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 			float vol = streamVolCurrent / streamVolMax;
-			vol *= volmod;
+			vol *= (Music.currentlyPlaying == null ? volmod : volmod*0.5f);
 
 			// soundpool.play(soundpoolmap.get(id), vol, vol, 1, 0, 1.f);
 			soundpool.play(sid, vol, vol, 1, (loop ? -1 : 0), 1.f);
