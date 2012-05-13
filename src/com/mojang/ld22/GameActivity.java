@@ -3,12 +3,15 @@ package com.mojang.ld22;
 import com.mojang.ld22.screen.TitleMenu;
 import oz.wizards.minicraft.R;
 import android.app.Activity;
+import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 
@@ -33,6 +36,8 @@ public class GameActivity extends Activity implements OnTouchListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+		Display d = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		
 		setContentView(R.layout.main);
 		
 		DisplayMetrics metrics = new DisplayMetrics();

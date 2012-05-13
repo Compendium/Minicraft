@@ -2,6 +2,8 @@ package com.mojang.ld22.item.resource;
 
 import java.io.Serializable;
 
+import android.util.Log;
+
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.level.Level;
@@ -33,9 +35,9 @@ public class Resource implements Serializable {
 	transient public final static Resource cloud = new PlantableResource("cloud", 2 + 4 * 32, Color.get(-1, 222, 555, 444), Tile.cloud, Tile.infiniteFall);
 	transient public final static Resource gem = new Resource("gem", 13 + 4 * 32, Color.get(-1, 101, 404, 545));
 
-	transient public final String name;
-	transient public final int sprite;
-	transient public final int color;
+	public final String name;
+	public final int sprite;
+	public final int color;
 
 	public Resource(String name, int sprite, int color) {
 		if (name.length() > 6) throw new RuntimeException("Name cannot be longer than six characters!");

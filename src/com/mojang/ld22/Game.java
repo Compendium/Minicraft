@@ -18,6 +18,7 @@ import android.text.format.Time;
 import android.util.Log;
 import android.widget.Toast;
 import android.content.Intent;
+
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
 //import com.mojang.ld22.gfx.Font;
@@ -362,6 +363,7 @@ public class Game {
 			menu.render(screen);
 		}
 
+		//TODO check if the screen is rotated
 		if (GameActivity.singleton.cursorPressed && GameActivity.singleton.cursorX != -1.f && GameActivity.singleton.cursorY != -1.f) {
 			float factx = GameActivity.singleton.cursorX / GameActivity.singleton.width * WIDTH;
 			float facty = GameActivity.singleton.cursorY / GameActivity.singleton.height * HEIGHT;
@@ -513,7 +515,7 @@ public class Game {
 			player.stamina = player.maxStamina;
 			player.staminaRecharge = 0;
 			player.staminaRechargeDelay = 40;
-
+			
 			percentage += 5;
 
 			long starTime = System.nanoTime();

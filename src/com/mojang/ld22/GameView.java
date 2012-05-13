@@ -56,6 +56,7 @@ public class GameView extends View {
 			if (!loaded)
 				initMeasure();
 
+			//canvas.rotate(180, 400, 240); //TODO
 			canvas.drawBitmap(gameBitmap, source, dest, drawPaint);
 		}
 	}

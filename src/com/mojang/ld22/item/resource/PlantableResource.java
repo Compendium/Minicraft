@@ -9,8 +9,8 @@ import com.mojang.ld22.level.tile.Tile;
 
 public class PlantableResource extends Resource {
 	private static final long serialVersionUID = 2021639233036691743L;
-	transient private List<Tile> sourceTiles;
-	transient private Tile targetTile;
+	private List<Tile> sourceTiles;
+	public Tile targetTile;
 
 	public PlantableResource(String name, int sprite, int color, Tile targetTile, Tile... sourceTiles1) {
 		this(name, sprite, color, targetTile, Arrays.asList(sourceTiles1));
