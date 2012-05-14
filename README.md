@@ -1,5 +1,6 @@
 # Minicraft #
-This is the Android version of "Minicraft", you can get a pre-compiled binary/apk here TODO
+This is the Android version of "Minicraft", you can get a pre-compiled binary/apk [here](http://db.tt/cTb7qYoX), or by using this QR code:  
+![Use the barcode scanner-app on your phone!](http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=http%3A//dl.dropbox.com/u/54418810/Minicraft.apk&chld=H|0)
 
 My changes are CC-BY-SA
 
