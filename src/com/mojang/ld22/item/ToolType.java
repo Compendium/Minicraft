@@ -17,4 +17,11 @@ public class ToolType implements Serializable {
 		this.name = name;
 		this.sprite = sprite;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(((ToolType)o).name.equals(this.name))
+			return true;
+		return false;
+	}
 }

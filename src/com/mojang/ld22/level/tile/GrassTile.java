@@ -71,7 +71,7 @@ public class GrassTile extends Tile {
 	public boolean interact(Level level, int xt, int yt, Player player, Item item, int attackDir) {
 		if (item instanceof ToolItem) {
 			ToolItem tool = (ToolItem) item;
-			if (tool.type == ToolType.shovel) {
+			if (tool.type.equals(ToolType.shovel)) {
 				if (player.payStamina(4 - tool.level)) {
 					level.setTile(xt, yt, Tile.dirt, 0);
 					Sound.monsterHurt.play();
@@ -81,7 +81,7 @@ public class GrassTile extends Tile {
 					}
 				}
 			}
-			if (tool.type == ToolType.hoe) {
+			if (tool.type.equals(ToolType.hoe)) {
 				if (player.payStamina(4 - tool.level)) {
 					Sound.monsterHurt.play();
 					if (random.nextInt(5) == 0) {

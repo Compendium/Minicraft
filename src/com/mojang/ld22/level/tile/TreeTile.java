@@ -78,7 +78,7 @@ public class TreeTile extends Tile {
 	public boolean interact(Level level, int xt, int yt, Player player, Item item, int attackDir) {
 		if (item instanceof ToolItem) {
 			ToolItem tool = (ToolItem) item;
-			if (tool.type == ToolType.axe) {
+			if (tool.type.equals(ToolType.axe)) {
 				if (player.payStamina(4 - tool.level)) {
 					hurt(level, xt, yt, random.nextInt(10) + (tool.level) * 5 + 10);
 					return true;
