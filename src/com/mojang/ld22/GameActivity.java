@@ -147,9 +147,9 @@ public class GameActivity extends Activity implements OnTouchListener {
 		if (game.menu instanceof TitleMenu) {
 			this.finish();
 		} else {	
-			game.setMenu(new TitleMenu());
 			saved = false;
 			considerSaving();
+			game.setMenu(new TitleMenu());
 			
 		}
 	}
