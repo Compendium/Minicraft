@@ -27,6 +27,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 	public static GameActivity singleton;
 
 	public int width = 0, height = 0;
+	public float cursorCenterX, cursorCenterY;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,10 @@ public class GameActivity extends Activity implements OnTouchListener {
 
 		gameView = (GameView) findViewById(R.id.gameView);
 		gameView.setOnTouchListener(this);
-
+		
+		cursorCenterX = (game.settings.controlshflipped ? gameView.getWidth() - gameView.getWidth() / 5 : gameView.getWidth() / 5);
+		cursorCenterY = gameView.getHeight() / 2;
+		
 		game.startRun(GameActivity.singleton);
 		gameThread = new Thread(new Runnable() {
 			public void run() {
@@ -159,6 +163,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 		super.onSaveInstanceState(outState);
 	}
 
+	/*
 	private static final int INVALID_POINTER_ID = -1;
 	public float cursorX = -1;
 	public float cursorY = -1;
@@ -273,8 +278,109 @@ public class GameActivity extends Activity implements OnTouchListener {
 			}
 		}
 		return true;
-	}
+	}*/
 
+	private static final int INVALID_POINTER_ID = -1;
+	public int cursorId = INVALID_POINTER_ID;
+	public float cursorX = 0, cursorY = 0;
+	public int attackId = INVALID_POINTER_ID;
+	public int menuId = INVALID_POINTER_ID;
+	public boolean cursorPressed = false;
+	public boolean attackPressed = false;
+	public boolean menuPressed = false;
+	
+	public boolean onTouch(View v, MotionEvent event) {
+		int action = event.getAction();
+		int actionCode = action & MotionEvent.ACTION_MASK;
+		
+		float hWidth = gameView.getWidth() / 2;
+		float hHeight = gameView.getHeight() / 2;
+		
+		if(actionCode == MotionEvent.ACTION_DOWN || actionCode == MotionEvent.ACTION_POINTER_DOWN) {
+			for(int i = 0; i < event.getPointerCount(); i++) {
+				if((game.settings.controlshflipped ? (event.getX(i) > hWidth) : (event.getX(i) < hWidth)) && cursorId == INVALID_POINTER_ID) { //cursor
+					cursorPressed = true;
+					cursorId = event.getPointerId(i);
+					
+				} else if((game.settings.controlshflipped ? (event.getX(i) < hWidth) : (event.getX(i) > hWidth))) { //buttons
+					if(event.getY(i) > hHeight) { //attack
+						attackId = event.getPointerId(i);
+						attackPressed = true;
+						
+						game.getInputHandler().keyEvent(InputHandler.ATTACK, true);
+					} else if(event.getY(i) < hHeight) {//menu
+						menuId = event.getPointerId(i);
+						menuPressed = true;
+						
+						game.getInputHandler().keyEvent(InputHandler.MENU, true);
+					}
+				}
+			}
+		} else if (actionCode == MotionEvent.ACTION_UP || actionCode == MotionEvent.ACTION_POINTER_UP || actionCode == MotionEvent.ACTION_CANCEL) {
+			if(action >> MotionEvent.ACTION_POINTER_ID_SHIFT == cursorId) {
+				cursorPressed = false;
+				cursorId = INVALID_POINTER_ID;
+				
+				game.getInputHandler().keyEvent(InputHandler.UP, false);
+				game.getInputHandler().keyEvent(InputHandler.DOWN, false);
+				game.getInputHandler().keyEvent(InputHandler.RIGHT, false);
+				game.getInputHandler().keyEvent(InputHandler.LEFT, false);
+			} else if(action >> MotionEvent.ACTION_POINTER_ID_SHIFT == attackId) {
+				attackId = INVALID_POINTER_ID;
+				attackPressed = false;
+				
+				game.getInputHandler().keyEvent(InputHandler.ATTACK, false);
+			} else if(action >> MotionEvent.ACTION_POINTER_ID_SHIFT == menuId) {
+				menuId = INVALID_POINTER_ID;
+				menuPressed = false;
+				
+				game.getInputHandler().keyEvent(InputHandler.MENU, false);
+			}
+		}
+		
+		if(cursorId != INVALID_POINTER_ID && actionCode == MotionEvent.ACTION_MOVE) {
+			cursorX = event.getX(cursorId);
+			cursorY = event.getY(cursorId);
+
+			float angle = 0.0f;
+			angle = (float) Math.atan2(cursorY - gameView.getHeight() / 2, cursorX - (game.settings.controlshflipped ? gameView.getWidth() - gameView.getWidth() / 5 : gameView.getWidth() / 5));
+			angle = (float) Math.toDegrees(angle);
+			if (angle < 0)
+				angle += 360.0f;
+
+			if (range(202.5f, angle, 337.5f)) {
+				if (!game.getInputHandler().isDown(InputHandler.UP))
+					game.getInputHandler().keyEvent(InputHandler.UP, true);
+			} else {
+				game.getInputHandler().keyEvent(InputHandler.UP, false);
+			}
+
+			if (range(157.5f, angle, 22.5)) {
+				if (!game.getInputHandler().isDown(InputHandler.DOWN))
+					game.getInputHandler().keyEvent(InputHandler.DOWN, true);
+			} else {
+
+				game.getInputHandler().keyEvent(InputHandler.DOWN, false);
+			}
+
+			if (range(112.5f, angle, 247.5f)) {
+				if (!game.getInputHandler().isDown(InputHandler.LEFT))
+					game.getInputHandler().keyEvent(InputHandler.LEFT, true);
+			} else {
+				game.getInputHandler().keyEvent(InputHandler.LEFT, false);
+			}
+
+			if ((range(292.5f, angle, 360) || range(0, angle, 67.5f))) {
+				if (!game.getInputHandler().isDown(InputHandler.RIGHT))
+					game.getInputHandler().keyEvent(InputHandler.RIGHT, true);
+			} else {
+				game.getInputHandler().keyEvent(InputHandler.RIGHT, false);
+			}
+		}
+		
+		return true;//onTouch event was handled in any case, so always return true
+	}
+	
 	/** Show an event in the LogCat view, for debugging */
 	@SuppressWarnings("unused")
 	private void dumpEvent(MotionEvent event) {
