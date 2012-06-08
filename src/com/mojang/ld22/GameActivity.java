@@ -50,9 +50,6 @@ public class GameActivity extends Activity implements OnTouchListener {
 		gameView = (GameView) findViewById(R.id.gameView);
 		gameView.setOnTouchListener(this);
 		
-		cursorCenterX = (game.settings.controlshflipped ? gameView.getWidth() - gameView.getWidth() / 5 : gameView.getWidth() / 5);
-		cursorCenterY = gameView.getHeight() / 2;
-		
 		game.startRun(GameActivity.singleton);
 		gameThread = new Thread(new Runnable() {
 			public void run() {
@@ -69,6 +66,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 		});
 
 		gameThread.start();
+		
 	}
 
 	@Override
@@ -290,6 +288,9 @@ public class GameActivity extends Activity implements OnTouchListener {
 	public boolean menuPressed = false;
 	
 	public boolean onTouch(View v, MotionEvent event) {
+		cursorCenterX = (game.settings.controlshflipped ? gameView.getWidth() - gameView.getWidth() / 5 : gameView.getWidth() / 5);
+		cursorCenterY = gameView.getHeight() / 2;
+		
 		int action = event.getAction();
 		int actionCode = action & MotionEvent.ACTION_MASK;
 		
@@ -317,7 +318,30 @@ public class GameActivity extends Activity implements OnTouchListener {
 				}
 			}
 		} else if (actionCode == MotionEvent.ACTION_UP || actionCode == MotionEvent.ACTION_POINTER_UP || actionCode == MotionEvent.ACTION_CANCEL) {
-			if(action >> MotionEvent.ACTION_POINTER_ID_SHIFT == cursorId) {
+			for(int i = 0; i < event.getPointerCount(); i++) {
+				if(event.getPointerId(i) == cursorId) {
+					cursorPressed = false;
+					cursorId = INVALID_POINTER_ID;
+					
+					game.getInputHandler().keyEvent(InputHandler.UP, false);
+					game.getInputHandler().keyEvent(InputHandler.DOWN, false);
+					game.getInputHandler().keyEvent(InputHandler.RIGHT, false);
+					game.getInputHandler().keyEvent(InputHandler.LEFT, false);
+				} else if(event.getPointerId(i) == attackId) {
+					attackId = INVALID_POINTER_ID;
+					attackPressed = false;
+					
+					game.getInputHandler().keyEvent(InputHandler.ATTACK, false);
+				} else if(event.getPointerId(i) == menuId) {
+					menuId = INVALID_POINTER_ID;
+					menuPressed = false;
+					
+					game.getInputHandler().keyEvent(InputHandler.MENU, false);
+				}
+			}
+			
+			//OLD ?bad? code
+			/*if(action >> MotionEvent.ACTION_POINTER_ID_SHIFT == cursorId) {
 				cursorPressed = false;
 				cursorId = INVALID_POINTER_ID;
 				
@@ -335,7 +359,7 @@ public class GameActivity extends Activity implements OnTouchListener {
 				menuPressed = false;
 				
 				game.getInputHandler().keyEvent(InputHandler.MENU, false);
-			}
+			}*/
 		}
 		
 		if(cursorId != INVALID_POINTER_ID && actionCode == MotionEvent.ACTION_MOVE) {
